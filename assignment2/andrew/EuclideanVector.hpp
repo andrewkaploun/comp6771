@@ -37,10 +37,10 @@ public:
     EuclideanVector& operator/= (double multiplicand);
     bool operator== (const EuclideanVector& other) const;
     bool operator!= (const EuclideanVector& other) const;
-    EuclideanVector& operator+ (const EuclideanVector& other) const;
-    EuclideanVector& operator- (const EuclideanVector& other) const;
-    EuclideanVector& operator* (double other) const;
-    EuclideanVector& operator/ (double other) const;
+    EuclideanVector operator+ (const EuclideanVector& other) const;
+    EuclideanVector operator- (const EuclideanVector& other) const;
+    EuclideanVector operator* (double other) const;
+    EuclideanVector operator/ (double other) const;
     double operator* (const EuclideanVector& other) const;
     
     friend std::ostream& operator<<(std::ostream& os, EuclideanVector const & tc);
@@ -51,7 +51,7 @@ public:
     double get(unsigned int i) const;
     double getEuclideanNorm() const;
     unsigned int getNumDimensions() const;
-    EuclideanVector& createUnitVector();
+    EuclideanVector createUnitVector();
 
 };
 

@@ -111,28 +111,28 @@ bool EuclideanVector:: operator!= (const EuclideanVector& other) const {
 }
 
 // make this &&
-EuclideanVector& EuclideanVector::operator+ (const EuclideanVector& other) const {
-    auto sum =new EuclideanVector(*this);
-    *sum += other;
-    return *sum;
+EuclideanVector EuclideanVector::operator+ (const EuclideanVector& other) const {
+    auto sum = EuclideanVector(*this);
+    sum += other;
+    return sum;
 }
 //
-EuclideanVector& EuclideanVector::operator- (const EuclideanVector& other) const {
-    auto sum =new EuclideanVector(*this);
-    *sum -= other;
-    return *sum;
+EuclideanVector EuclideanVector::operator- (const EuclideanVector& other) const {
+    auto sum = EuclideanVector(*this);
+    sum -= other;
+    return sum;
 }
 // todo add second one like we say we have to below
-EuclideanVector& EuclideanVector::operator* ( double other) const {
-    auto product =  new EuclideanVector(*this);
-    *product *= other;
-    return *product;
+EuclideanVector EuclideanVector::operator* ( double other) const {
+    auto product =   EuclideanVector(*this);
+    product *= other;
+    return product;
 }
 //
-EuclideanVector& EuclideanVector::operator/ (double other) const {
-    auto dividend = new EuclideanVector(*this);
-    *dividend /= other;
-    return *dividend;
+EuclideanVector EuclideanVector::operator/ (double other) const {
+    auto dividend =  EuclideanVector(*this);
+    dividend /= other;
+    return dividend;
 }
 //todo 
 double EuclideanVector::operator* (const EuclideanVector& other) const {
@@ -190,7 +190,7 @@ unsigned int EuclideanVector::getNumDimensions() const {
     return size;
 }
 
-EuclideanVector& EuclideanVector::createUnitVector() {
+EuclideanVector EuclideanVector::createUnitVector() {
     return (*this) / this->getEuclideanNorm();
 }
 
