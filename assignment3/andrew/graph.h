@@ -5,15 +5,78 @@
 namespace gdwg{
 
 
-// template<typename N, typename E> class GraphNode ;
-// template<typename N, typename E> class Edge;
+
 
 template<typename N, typename E> class Graph {
-    // std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode<N, E>>> nodes; 
-    // std::set<std::shared_ptr<Edge<N,E>>> edges;
+
+typedef std::tuple<std::weak_ptr<N>, std::weak_ptr<N>, E> Edge;
 
 private:
-    // std::map<std::shared_ptr<N>, std::map<std::weak_ptr<N>, std::unique_ptr<E>>> m; 
+    struct SharedComparatorN {
+        bool operator()(const std::shared_ptr<N>& lhs,
+                        const std::shared_ptr<N>& rhs) const
+        {
+            return *lhs < *rhs;
+        }
+    };
+
+    struct SharedComparatorNW {
+        bool operator()(const std::weak_ptr<N>& lhs,
+                        const std::weak_ptr<N>& rhs) const
+        {
+            return *lhs < *rhs;
+        }
+    };
+
+    struct SharedComparatorE {
+        bool operator()(const std::unique_ptr<E>& lhs,
+                        const std::unique_ptr<E>& rhs) const
+        {
+            return std::get<2>(*lhs) < std::get<2>(*rhs);
+        }
+    };
+
+    struct SharedComparatorES {
+        bool operator()(const std::shared_ptr<E>& lhs,
+                        const std::shared_ptr<E>& rhs) const
+        {
+            return *lhs < *rhs;
+        }
+    };
+
+
+//    class  Edge {
+//    public:
+//        std::shared_ptr<E> weight;
+//        std::weak_ptr<N> src;
+//        std::weak_ptr<N> dst;
+//    };
+/*
+ *
+ * this is the good stuff i had before quitting:
+    class GraphNode {
+    public:
+        std::weak_ptr<N> val;
+        std::set<std::unique_ptr<Edge>, SharedComparatorE> edges; // stores outgoing edges
+    };
+
+    std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN> nodes;
+
+
+
+ */
+//    std::set<std::shared_ptr<Edge>> edges;
+
+//    std::map<std::shared_ptr<N>, std::pair<std::set<std::tuple< E,
+
+    // the pair is for outgoing
+    std::map<std::shared_ptr<N>, std::map<std::weak_ptr<N>, std::set<std::shared_ptr<E>,
+        SharedComparatorES>, SharedComparatorNW>, SharedComparatorN> outgoing;
+
+    // for incoming:
+    std::map<std::shared_ptr<N>, std::map<std::weak_ptr<N>, std::set<std::shared_ptr<E>,
+        SharedComparatorES>, SharedComparatorNW>, SharedComparatorN> incoming;
+
     N m;
 public:
     Graph();
@@ -38,23 +101,10 @@ public:
     const N& value() const;
     void printAll() const;
 };
-#include "graph.tem"
+#include "graph.tpp"
 
 
 
-
-// template<typename N, typename E> class GraphNode {
-// public:
-//     std::shared_ptr<N> val;
-//     std::set<std::weak_ptr<Edge<N, E>>> edges;
-// };
-
-// template<typename N, typename E> class Edge {
-// public:
-//     std::shared_ptr<E> weight;
-//     std::weak_ptr<N> src;
-//     std::weak_ptr<N> dst;
-// };
 
 
 };

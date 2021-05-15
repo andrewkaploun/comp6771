@@ -13,7 +13,7 @@ weak pointers i think.
 
 we'll have shared pointers in the map that holds shit in the graph.
 
-we'll have an unordered set of the shared poitners of the edges i guess.
+we'll have an unordered set of the shared pointers of the edges i guess.
 
 wait, how do we return const N& if we store our N's as shared pointers? can we 
 return an rvalue reference? (like move a thing i hope?)
@@ -27,8 +27,7 @@ return an rvalue reference? (like move a thing i hope?)
     // Graph::Graph<N, E>(void ) {
 
     // }
-
- template<typename N, typename E> Graph<N, E>::Graph(void) {
+    template<typename N, typename E> Graph<N, E>::Graph(void) {
 
     }
    template<typename N, typename E> bool Graph<N, E>::addNode(const N& val) {
