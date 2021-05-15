@@ -69,13 +69,15 @@ private:
 
 //    std::map<std::shared_ptr<N>, std::pair<std::set<std::tuple< E,
 
+    // polylogarithmic time for all operations; zero memory duplication.
+
     // the pair is for outgoing
-    std::map<std::shared_ptr<N>, std::map<std::weak_ptr<N>, std::set<std::shared_ptr<E>,
-        SharedComparatorES>, SharedComparatorNW>, SharedComparatorN> outgoing;
+    std::map<std::shared_ptr<N>, std::map<std::shared_ptr<N>, std::set<std::shared_ptr<E>,
+        SharedComparatorES>, SharedComparatorN>, SharedComparatorN> outgoing;
 
     // for incoming:
-    std::map<std::shared_ptr<N>, std::map<std::weak_ptr<N>, std::set<std::shared_ptr<E>,
-        SharedComparatorES>, SharedComparatorNW>, SharedComparatorN> incoming;
+    std::map<std::shared_ptr<N>, std::map<std::shared_ptr<N>, std::set<std::shared_ptr<E>,
+        SharedComparatorES>, SharedComparatorN>, SharedComparatorN> incoming;
 
     N m;
 public:

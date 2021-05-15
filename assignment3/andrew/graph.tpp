@@ -30,14 +30,37 @@ return an rvalue reference? (like move a thing i hope?)
     template<typename N, typename E> Graph<N, E>::Graph(void) {
 
     }
-   template<typename N, typename E> bool Graph<N, E>::addNode(const N& val) {
+    template<typename N, typename E> bool Graph<N, E>::addNode(const N& val) {
+        std::shared_ptr<N> n = std::make_shared<N>(val);
+        auto it = outgoing.find(n);
+        if (it != outgoing.end() /*&&  *(it->first) == *n  */) {
+            return false;
+        }
+
+        outgoing[n].clear();
+        incoming[n].clear();
         return true;
     }
+
     template<typename N, typename E> bool Graph<N, E>::addEdge(const N& src, const N& dst, const E& w) {
+        std::shared_ptr<N> s = std::make_shared<N>(src);
+        std::shared_ptr<N> d = std::make_shared<N>(dst);
+        std::shared_ptr<E> e = std::make_shared<E>(w);
+        if (outgoing.find(s) == outgoing.end() || outgoing.find(d) == outgoing.end()) {
+            throw std::runtime_error("Deleting Edge of Non-existent Node");
+        }
+        if (outgoing[s][d].count(e)) {
+            return false;
+        }
+
+        outgoing[s][d].insert(e);
+        incoming[d][s].insert(e);
+
         return true;
     }
     template<typename N, typename E> bool Graph<N, E>::replace(const N& oldData, const N& newData) {
-        return true;
+        std::shared_ptr<N> old = std::make_shared<N>(src);
+        if (outgoing)
     }
     template<typename N, typename E> void Graph<N, E>::mergeReplace(const N& oldData, const N& newData) {
     }

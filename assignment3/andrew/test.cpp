@@ -5,8 +5,9 @@ int main()
 {
     std::cout << "=============== Test default constructor and insert ================\n";
     gdwg::Graph<std::string, int> graph1{};
-    
-    graph1.addNode("Chunnan");
+
+    std::cout<< graph1.addNode("Chunnan")<<std::endl;
+    std::cout<< graph1.addNode("Chunnan")<<std::endl;
     graph1.addNode("Julie");
     graph1.addNode("Michael");
     graph1.addNode("Shuning");
