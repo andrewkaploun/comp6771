@@ -19,23 +19,6 @@ private:
             return *lhs < *rhs;
         }
     };
-
-    struct SharedComparatorNW {
-        bool operator()(const std::weak_ptr<N>& lhs,
-                        const std::weak_ptr<N>& rhs) const
-        {
-            return *lhs < *rhs;
-        }
-    };
-
-    struct SharedComparatorE {
-        bool operator()(const std::unique_ptr<E>& lhs,
-                        const std::unique_ptr<E>& rhs) const
-        {
-            return std::get<2>(*lhs) < std::get<2>(*rhs);
-        }
-    };
-
     struct SharedComparatorES {
         bool operator()(const std::shared_ptr<E>& lhs,
                         const std::shared_ptr<E>& rhs) const
@@ -44,46 +27,23 @@ private:
         }
     };
 
-
-//    class  Edge {
-//    public:
-//        std::shared_ptr<E> weight;
-//        std::weak_ptr<N> src;
-//        std::weak_ptr<N> dst;
-//    };
-
-
-//  this is the good stuff i had before quitting:
     class GraphNode {
     public:
         std::weak_ptr<N> val;
-//        std::set<std::unique_ptr<Edge>, SharedComparatorE> edges; // stores outgoing edges
-//        std::map<std::weak_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>> outgoing;
-//        std::map<std::weak_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>> incoming;
     };
 
-//    std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN> nodes;
-
-
-
-
-//    std::set<std::shared_ptr<Edge>> edges;
-
-//    std::map<std::shared_ptr<N>, std::pair<std::set<std::tuple< E,
 
     // polylogarithmic time for all operations; zero memory duplication.
 
     // the pair is for outgoing
-    std::map<std::shared_ptr<GraphNode>, std::map<std::shared_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>
-       > > outgoing;
+    std::map<std::shared_ptr<GraphNode>,std::map<std::shared_ptr<GraphNode>,std::set<std::shared_ptr<E>,SharedComparatorES>>> outgoing;
 
     // for incoming:
-    std::map<std::shared_ptr<GraphNode>, std::map<std::shared_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>
-     >   > incoming;
+    std::map<std::shared_ptr<GraphNode>,std::map<std::shared_ptr<GraphNode>,std::set<std::shared_ptr<E>,SharedComparatorES>>> incoming;
 
     std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN> labelToNode;
-    mutable  typename std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN>::const_iterator labelToNodeIterator;
-    N m;
+    mutable typename std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN>::const_iterator labelToNodeIterator;
+
 public:
     Graph();
 

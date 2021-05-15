@@ -224,7 +224,7 @@ return an rvalue reference? (like move a thing i hope?)
             throw std::runtime_error("Printing edges from fake node");
         }
         std::vector<std::pair<E, N>> v;
-        std::cout<< "Edges attached to "<< val << std::endl;
+        std::cout<< "Edges attached to Node "<< val << std::endl;
 
         for (auto p: outgoing[labelToNode[str]]) {
             for (auto e : p.second) {
@@ -258,10 +258,20 @@ return an rvalue reference? (like move a thing i hope?)
 
     template<typename N, typename E> void Graph<N, E>::printAll() const {
         std::cout <<"********** Print ALL ***********"<< std::endl;
-        printNodes();
-        for (auto p : labelToNode) {
-            printEdges(*(p.first));
+        std::vector<std::pair<int, N>> degreeAndLabel;
+        for (auto it : labelToNode) {
+            int n = 0;
+            for (auto bucket :outgoing[(it.second)]) {
+                if (bucket.second.size()) {
+                    n++;
+                }
+            }
+            degreeAndLabel.push_back({n, *(it.first)});
+        }
+        std::sort(degreeAndLabel.begin(), degreeAndLabel.end());
 
+        for (auto n : degreeAndLabel) {
+            printEdges(n.second);
         }
 
     }
