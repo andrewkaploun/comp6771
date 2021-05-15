@@ -33,7 +33,6 @@ return an rvalue reference? (like move a thing i hope?)
     template<typename N, typename E> bool Graph<N, E>::addNode(const N& val) {
         std::shared_ptr<N> n = std::make_shared<N>(val);
         if (labelToNode.count(n) /*&&  *(it->first) == *n  */) {
-            std::cout << "fuck"<<std::endl;
 
             return false;
         }
@@ -55,7 +54,6 @@ return an rvalue reference? (like move a thing i hope?)
 
         if (outgoing[sNode][dNode].count(e)) {
 
-            std::cout << "fuck"<<std::endl;
             return false;
         }
 
