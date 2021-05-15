@@ -7,7 +7,9 @@ int main()
     gdwg::Graph<std::string, int> graph1{};
 
     std::cout<< graph1.addNode("Chunnan")<<std::endl;
-    std::cout<< graph1.addNode("Chunnan")<<std::endl;
+//    std::cout<< graph1.addNode
+//    ("Chunnan")<<std::endl;
+
     graph1.addNode("Julie");
     graph1.addNode("Michael");
     graph1.addNode("Shuning");
@@ -15,10 +17,13 @@ int main()
     graph1.addNode("Kevin");
 
     graph1.addEdge("Chunnan", "Julie", 15);
+    graph1.printAll();
     graph1.addEdge("Chunnan", "Michael", 16);
     graph1.addEdge("Chunnan", "Shuning", 17);
+    graph1.printAll();
     graph1.addEdge("Chunnan", "Shuning", 10);
     graph1.addEdge("Shuning", "Brook", 6);
+    graph1.printAll();
     graph1.addEdge("Shuning", "Kevin", 6);
     graph1.addEdge("Kevin", "Chunnan", 9);
     graph1.addEdge("Brook", "Chunnan", 4);

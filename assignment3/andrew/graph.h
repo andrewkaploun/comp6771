@@ -9,7 +9,7 @@ namespace gdwg{
 
 template<typename N, typename E> class Graph {
 
-typedef std::tuple<std::weak_ptr<N>, std::weak_ptr<N>, E> Edge;
+//typedef std::tuple<std::weak_ptr<N>, std::weak_ptr<N>, E> Edge;
 
 private:
     struct SharedComparatorN {
@@ -51,20 +51,22 @@ private:
 //        std::weak_ptr<N> src;
 //        std::weak_ptr<N> dst;
 //    };
-/*
- *
- * this is the good stuff i had before quitting:
+
+
+//  this is the good stuff i had before quitting:
     class GraphNode {
     public:
         std::weak_ptr<N> val;
-        std::set<std::unique_ptr<Edge>, SharedComparatorE> edges; // stores outgoing edges
+//        std::set<std::unique_ptr<Edge>, SharedComparatorE> edges; // stores outgoing edges
+//        std::map<std::weak_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>> outgoing;
+//        std::map<std::weak_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>> incoming;
     };
 
-    std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN> nodes;
+//    std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN> nodes;
 
 
 
- */
+
 //    std::set<std::shared_ptr<Edge>> edges;
 
 //    std::map<std::shared_ptr<N>, std::pair<std::set<std::tuple< E,
@@ -72,13 +74,15 @@ private:
     // polylogarithmic time for all operations; zero memory duplication.
 
     // the pair is for outgoing
-    std::map<std::shared_ptr<N>, std::map<std::shared_ptr<N>, std::set<std::shared_ptr<E>,
-        SharedComparatorES>, SharedComparatorN>, SharedComparatorN> outgoing;
+    std::map<std::shared_ptr<GraphNode>, std::map<std::shared_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>
+       > > outgoing;
 
     // for incoming:
-    std::map<std::shared_ptr<N>, std::map<std::shared_ptr<N>, std::set<std::shared_ptr<E>,
-        SharedComparatorES>, SharedComparatorN>, SharedComparatorN> incoming;
+    std::map<std::shared_ptr<GraphNode>, std::map<std::shared_ptr<GraphNode>, std::set<std::shared_ptr<E>, SharedComparatorES>
+     >   > incoming;
 
+    std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN> labelToNode;
+    mutable  typename std::map<std::shared_ptr<N>, std::shared_ptr<GraphNode>, SharedComparatorN>::const_iterator labelToNodeIterator;
     N m;
 public:
     Graph();

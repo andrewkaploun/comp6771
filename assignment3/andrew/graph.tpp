@@ -32,13 +32,14 @@ return an rvalue reference? (like move a thing i hope?)
     }
     template<typename N, typename E> bool Graph<N, E>::addNode(const N& val) {
         std::shared_ptr<N> n = std::make_shared<N>(val);
-        auto it = outgoing.find(n);
-        if (it != outgoing.end() /*&&  *(it->first) == *n  */) {
+        if (labelToNode.count(n) /*&&  *(it->first) == *n  */) {
+            std::cout << "fuck"<<std::endl;
+
             return false;
         }
 
-        outgoing[n].clear();
-        incoming[n].clear();
+        labelToNode[n] = std::make_shared<GraphNode>();
+        labelToNode[n]->val = n;
         return true;
     }
 
@@ -46,64 +47,225 @@ return an rvalue reference? (like move a thing i hope?)
         std::shared_ptr<N> s = std::make_shared<N>(src);
         std::shared_ptr<N> d = std::make_shared<N>(dst);
         std::shared_ptr<E> e = std::make_shared<E>(w);
-        if (outgoing.find(s) == outgoing.end() || outgoing.find(d) == outgoing.end()) {
+        if (!labelToNode.count(s) || !labelToNode.count(d)) {
             throw std::runtime_error("Deleting Edge of Non-existent Node");
         }
-        if (outgoing[s][d].count(e)) {
+        std::shared_ptr<GraphNode> sNode = labelToNode[s];
+        std::shared_ptr<GraphNode> dNode = labelToNode[d];
+
+        if (outgoing[sNode][dNode].count(e)) {
+
+            std::cout << "fuck"<<std::endl;
             return false;
         }
 
-        outgoing[s][d].insert(e);
-        incoming[d][s].insert(e);
+        outgoing[sNode][dNode].insert(e);
+        incoming[dNode][sNode].insert(e);
 
         return true;
     }
     template<typename N, typename E> bool Graph<N, E>::replace(const N& oldData, const N& newData) {
-        std::shared_ptr<N> old = std::make_shared<N>(src);
-        if (outgoing)
+        auto oldVal = std::make_shared<N>(oldData);
+        auto newVal = std::make_shared<N>(newData);
+        if (!labelToNode.count(oldVal)) {
+            throw std::runtime_error("Replacing Non-existent Node");
+        }
+        if (labelToNode.count(newVal)) {
+            return false;
+        }
+
+        labelToNode[newVal] = labelToNode[oldVal];
+        labelToNode[oldVal]->val = newVal;
+        labelToNode.erase(oldVal);
+
+        return true;
     }
     template<typename N, typename E> void Graph<N, E>::mergeReplace(const N& oldData, const N& newData) {
-    }
-    template<typename N, typename E> void Graph<N, E>::deleteNode(const N&) noexcept {
+        auto oldVal = std::make_shared<N>(oldData);
+        auto newVal = std::make_shared<N>(newData);
+        if (!labelToNode.count(oldVal) || !labelToNode.count(newVal)) {
+            throw std::runtime_error("Merge Replacing Non-existent Node");
+        }
+        // First, delete edges from old and add edges to new
+        std::shared_ptr<GraphNode> oldNode = labelToNode[oldVal];
+        std::shared_ptr<GraphNode> newNode = labelToNode[newVal];
 
+        std::vector<std::pair<std::shared_ptr<GraphNode>, E>> oldOutgoing;
+
+        for (auto p : outgoing[oldNode]) {
+            for (auto pp : p.second) {
+                oldOutgoing.push_back({p.first, *pp });
+            }
+        }
+//auto oldOutgoing         (outgoing[oldNode].begin(),
+//                                                                                            outgoing[oldNode].end());
+
+        for (auto edge : oldOutgoing) {
+            auto otherNode = edge.first;
+            auto e = edge.second;
+//            for (auto ep : e) {
+                deleteEdge(*(oldNode->val.lock()), *(otherNode->val.lock()), e);
+                addEdge(*(newNode->val.lock()), *(otherNode->val.lock()),e);
+//            }
+        }
+
+
+
+//        std::vector<std::pair<std::shared_ptr<GraphNode>, std::set<std::shared_ptr<E>>>> oldIncoming (incoming[oldNode].begin(),
+//                                                                                            incoming[oldNode].end());
+        std::vector<std::pair<std::shared_ptr<GraphNode>, E>> oldIncoming;
+
+        for (auto p : incoming[oldNode]) {
+            for (auto pp : p.second) {
+                oldIncoming.push_back({p.first, *pp });
+            }
+        }
+        for (auto edge : oldIncoming) {
+            auto otherNode = edge.first;
+            auto e = edge.second;
+
+//            for (auto ep : e) {
+                deleteEdge(*(otherNode->val.lock()), *(oldNode->val.lock()), e);
+                addEdge(*(otherNode->val.lock()), *(newNode->val.lock()), e);
+//            }
+        }
+
+
+        // Then, call deleteNode on old
+        deleteNode(oldData);
     }
+    template<typename N, typename E> void Graph<N, E>::deleteNode(const N& n) noexcept {
+        auto val = std::make_shared<N>(n);
+        if (labelToNode.count(val)) {
+
+            auto node = labelToNode[val];
+
+            std::vector<std::shared_ptr<GraphNode>> neighbors;
+            // first delete all the edges, then delete the node manually
+            for (auto e : outgoing[node]) {
+                neighbors.push_back(e.first);
+            }
+            for (auto e : incoming[node]) {
+                neighbors.push_back(e.first);
+            }
+
+            for (auto neighbor : neighbors) {
+                outgoing[node][neighbor].clear();
+                outgoing[neighbor][node].clear();
+                incoming[node][neighbor].clear();
+                incoming[neighbor][node].clear();
+            }
+
+            incoming.erase(node);
+            outgoing.erase(node);
+            labelToNode.erase(val);
+        }
+    }
+
+
     template<typename N, typename E> void Graph<N, E>::deleteEdge(const N& src, const N& dst, const E& w) noexcept {
+        std::shared_ptr<N> s = std::make_shared<N>(src);
+        std::shared_ptr<N> d = std::make_shared<N>(dst);
 
+        if (!labelToNode.count(s) || !labelToNode.count(d)) {
+            return;
+        }
+
+        auto src2 = labelToNode[s];
+        auto dst2= labelToNode[d];
+
+        std::shared_ptr<E> e = std::make_shared<E>(w);
+
+        outgoing[src2][dst2].erase(e);
+        incoming[dst2][src2].erase(e);
     }
+
+
     template<typename N, typename E> void Graph<N, E>::clear() noexcept {
+        outgoing.clear();
+        incoming.clear();
+        labelToNode.clear();
+    }
 
-    }
     template<typename N, typename E> bool Graph<N, E>::isNode(const N& val) const {
-        return true;
+        return labelToNode.count(val) > 0 ? true : false;
     }
+
     template<typename N, typename E> bool Graph<N, E>::isConnected(const N& src, const N& dst) const {
-        return true;
+        std::shared_ptr<N> s = std::make_shared<N>(src);
+        std::shared_ptr<N> d = std::make_shared<N>(dst);
+
+        if (!labelToNode.count(s) || !labelToNode.count(d)) {
+            throw std::runtime_error("Checking if non-existent nodes are connected");
+        }
+        auto src2 = labelToNode[s];
+        auto dst2 = labelToNode[d];
+        return !outgoing[src2][dst2].isEmpty();
+
     }
     template<typename N, typename E> void Graph<N, E>::printNodes() const {
+        std::vector<std::pair<int, N>> degreeAndLabel;
+        for (auto it : labelToNode) {
+            int n = 0;
+            for (auto bucket :outgoing[(it.second)]) {
+                if (bucket.second.size()) {
+                    n++;
+                }
+            }
+            degreeAndLabel.push_back({n, *(it.first)});
+        }
+        std::sort(degreeAndLabel.begin(), degreeAndLabel.end());
 
+        for (auto n : degreeAndLabel) {
+            std::cout<< n.second<< std::endl;
+        }
     }
     template<typename N, typename E> void Graph<N, E>::printEdges(const N& val) const {
+        auto str = std::make_shared<N>(val);
+        if (!labelToNode.count(str)) {
+            throw std::runtime_error("Printing edges from fake node");
+        }
+        std::vector<std::pair<E, N>> v;
+        std::cout<< "Edges attached to "<< val << std::endl;
 
+        for (auto p: outgoing[labelToNode[str]]) {
+            for (auto e : p.second) {
+                v.push_back(std::make_pair(*e, *(p.first->val.lock())));
+            }
+
+        }
+        if (!v.size()) {
+            std::cout << "(null)"<<std::endl;
+            return;
+        }
+        std::sort(v.begin(), v.end());
+        for (auto p : v) {
+            std::cout << p.second << " "<< p.first<< std::endl;
+        }
     }
 
     template<typename N, typename E> void Graph<N, E>::begin() const {
-
+        labelToNodeIterator = labelToNode.begin();
     }
     template<typename N, typename E> bool Graph<N, E>::end() const {
-        return true;
+        return labelToNodeIterator == labelToNode.end();
     }
     template<typename N, typename E> void Graph<N, E>::next() const {
-
+        ++labelToNodeIterator ;
     }
     template<typename N, typename E> const N& Graph<N, E>::value() const{
-        // return *(m.begin()->first);
-        return m;
+        return *(labelToNodeIterator->first);
         
     }
 
     template<typename N, typename E> void Graph<N, E>::printAll() const {
+        std::cout <<"********** Print ALL ***********"<< std::endl;
+        printNodes();
+        for (auto p : labelToNode) {
+            printEdges(*(p.first));
 
-        
+        }
+
     }
 
 
