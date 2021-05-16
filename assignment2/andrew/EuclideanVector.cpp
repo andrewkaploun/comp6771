@@ -170,7 +170,7 @@ std::ostream& operator<<(std::ostream& os, EuclideanVector const & tc) {
     return os;
 }
 
-EuclideanVector::operator std::vector<double> () {
+EuclideanVector::operator std::vector<double> () const {
     std::vector<double> v(size);
     for (unsigned int i = 0; i < size; i++) {
         v[i] = vector[i];
@@ -178,7 +178,7 @@ EuclideanVector::operator std::vector<double> () {
     return v;
 }
 
-EuclideanVector::operator std::list<double> () {
+EuclideanVector::operator std::list<double> () const {
     std::list<double> l;
     for (unsigned int i = 0; i < size; i++) {
         l.push_back(vector[i]);
@@ -202,10 +202,13 @@ unsigned int EuclideanVector::getNumDimensions() const {
     return size;
 }
 
-EuclideanVector EuclideanVector::createUnitVector() {
+EuclideanVector EuclideanVector::createUnitVector() const {
+//    return EuclideanVector();
     return (*this) / this->getEuclideanNorm();
 }
-
+    EuclideanVector operator*(double other, const EuclideanVector& m)  {
+    return m * other;
+}
 };
 
 
