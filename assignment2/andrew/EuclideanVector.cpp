@@ -17,6 +17,8 @@ namespace evec{
 EuclideanVector::EuclideanVector(unsigned int n) {
     vector = new double[n];
     size = n;
+    for (unsigned int i = 0; i < n; i++)
+        vector[i] = 0;
 }
 EuclideanVector::EuclideanVector() :EuclideanVector(0) {}
 
@@ -27,7 +29,16 @@ EuclideanVector::EuclideanVector(unsigned int n, double d) : EuclideanVector(n) 
 }
 
 
-EuclideanVector::EuclideanVector(std::initializer_list<double> l) : EuclideanVector(l.begin(), l.end()){}
+EuclideanVector::EuclideanVector(std::initializer_list<double> l) : EuclideanVector(l.size()){
+    auto it = l.begin();
+    unsigned int i = 0;
+    while( it != l.end()) {
+        vector[i] = *it;
+        i++;
+        it++;
+    }
+
+}
 
 EuclideanVector::EuclideanVector(const EuclideanVector& c) : EuclideanVector(c.getNumDimensions()) {
     for (unsigned int i = 0; i < size; i++) {
@@ -101,16 +112,21 @@ EuclideanVector& EuclideanVector::operator/= (double multiplicand ) {
 }
 
 bool EuclideanVector:: operator== (const EuclideanVector& other) const {
+    std::cout << "this = "<<*this<<std::endl;
+    std::cout<<"other = "<< other<< std::endl;
     if (other.getNumDimensions() != this->getNumDimensions()) {
+        std::cout << " bad"<< this->getNumDimensions()<<" "<<other.getNumDimensions()<<std::endl;
         return false;
     }
-
+    std::cout<< " here"<<std::endl;
     for (unsigned int i = 0; i < this->getNumDimensions(); i++) {
-        if (this[i] != other[i]) {
+        std::cout << (*this)[i]<< " "<< vector[i]<<std::endl;
+        if ((*this)[i] != other[i]) {
+            std::cout << "returning false"<<std::endl;
             return false;
         }
     }
-
+    std::cout<< " returning true"<< std::endl;
     return true;
 }
 
@@ -128,6 +144,9 @@ EuclideanVector EuclideanVector::operator+ (const EuclideanVector& other) const 
 EuclideanVector EuclideanVector::operator- (const EuclideanVector& other) const {
     auto sum = EuclideanVector(*this);
     sum -= other;
+    assert(sum.getNumDimensions() == other.getNumDimensions() &&
+    sum.getNumDimensions() == this->getNumDimensions());
+    std::cout<< " applied the minus operation now minus is "<< sum<<std::endl;
     return sum;
 }
 // todo add second one like we say we have to below

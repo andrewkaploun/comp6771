@@ -52,8 +52,14 @@ void provided_tests() {
     stream << j << std::endl;
 
     stream << "dot product = " << j * b << std::endl;
-
-    if (g == (e - d)) stream << "true" << std::endl;
+    std::cout << " begin"<<std::endl;
+    std::cout << (e-d).getNumDimensions()<<std::endl;
+    std::cout << "eminusd" <<(e-d)<<std::endl;
+    std::cout << (g).getNumDimensions()<<std::endl;
+    auto hate = (e - d);
+    std::cout<< " hate = "<<hate<< std::endl;
+    if (g == hate) stream << "true" << std::endl;
+    std::cout << "end"<<std::endl;
     if (j != b ) stream << "false" << std::endl;
 
     j[0] = 1;
@@ -72,7 +78,7 @@ void provided_tests() {
     // list initialisation
     evec::EuclideanVector k {1, 2, 3};
     stream << k << std::endl;
-
+    std::cout << " stream str is "<< stream.str();
     std::string output_result = "2: [0 0]\n"
                                 "D1:2 [1 2 3]\n"
                                 "[4 5 6 7] Euclidean Norm = 11.225\n"
