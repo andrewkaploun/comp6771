@@ -158,14 +158,14 @@ double EuclideanVector::operator* (const EuclideanVector& other) const {
 
 std::ostream& operator<<(std::ostream& os, EuclideanVector const & tc) {
     if (tc.size == 0) {
-        os << "[]" << std::endl;
+        os << "[]" ;
         return os;
     }
     os << "[" << tc[0];
     for (unsigned int i = 1; i < tc.getNumDimensions(); i++) {
         os << " " << tc[i];
     }
-    os << "]" << std::endl;
+    os << "]";
 
     return os;
 }
