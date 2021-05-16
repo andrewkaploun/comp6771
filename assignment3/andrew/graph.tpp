@@ -172,7 +172,8 @@ return an rvalue reference? (like move a thing i hope?)
     }
 
     template<typename N, typename E> bool Graph<N, E>::isNode(const N& val) const {
-        return labelToNode.count(val) > 0 ? true : false;
+        auto v = std::make_shared<N>(val);
+        return labelToNode.count(v) > 0 ? true : false;
     }
 
     template<typename N, typename E> bool Graph<N, E>::isConnected(const N& src, const N& dst) const {
@@ -182,9 +183,14 @@ return an rvalue reference? (like move a thing i hope?)
         if (!labelToNode.count(s) || !labelToNode.count(d)) {
             throw std::runtime_error("Checking if non-existent nodes are connected");
         }
-        auto src2 = labelToNode[s];
-        auto dst2 = labelToNode[d];
-        return !outgoing[src2][dst2].isEmpty();
+        auto src2 = labelToNode.find(s)->second;
+        auto dst2 = labelToNode.find(d)->second;
+        auto it1 = outgoing.find(src2);
+        if (it1 == outgoing.end()) return false;
+        auto it2 = it1->second.find(dst2);
+        if (it2 == it1->second.end()) return false;
+        return it2->second.empty();
+//        return !outgoing[src2][dst2].empty();
 
     }
     template<typename N, typename E> void Graph<N, E>::printNodes() const {
