@@ -1,6 +1,7 @@
 
-
+#pragma once
 #include<bits/stdc++.h>
+
 namespace evec{
 
 class EuclideanVector {
@@ -11,6 +12,7 @@ class EuclideanVector {
 
 public:
     EuclideanVector(unsigned int n);
+    EuclideanVector();
     // template <class Iter> EuclideanVector (Iter begin, Iter end);
     template <class Iter> EuclideanVector (Iter begin, Iter end) 
         : EuclideanVector(std::distance(begin, end))  {
@@ -25,6 +27,8 @@ public:
     EuclideanVector(std::list<double> l);
     EuclideanVector(std::initializer_list<double> l);
     EuclideanVector(const EuclideanVector& c);
+    EuclideanVector& operator=(const EuclideanVector& ) = default;
+    EuclideanVector& operator=(EuclideanVector&& ) = default;
     EuclideanVector(EuclideanVector&& c);
     ~EuclideanVector();
 
@@ -40,6 +44,7 @@ public:
     EuclideanVector operator+ (const EuclideanVector& other) const;
     EuclideanVector operator- (const EuclideanVector& other) const;
     EuclideanVector operator* (double other) const;
+//    EuclideanVector operator*(double other, const EuclideanVector& m) const;
     EuclideanVector operator/ (double other) const;
     double operator* (const EuclideanVector& other) const;
     
@@ -54,6 +59,8 @@ public:
     EuclideanVector createUnitVector();
 
 };
-
+    EuclideanVector operator*(double other, const EuclideanVector& m)  {
+        return m* other;
+    }
 };
 

@@ -1,8 +1,7 @@
 #include <iostream> 
 #include <vector> 
 #include <list> 
-#include "EuclideanVector.hpp" 
-
+#include "EuclideanVector.h"
 
 
 int main() {

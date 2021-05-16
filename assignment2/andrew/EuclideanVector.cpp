@@ -1,4 +1,4 @@
-#include "EuclideanVector.hpp"
+#include "EuclideanVector.h"
 
 namespace evec{
 
@@ -18,6 +18,7 @@ EuclideanVector::EuclideanVector(unsigned int n) {
     vector = new double[n];
     size = n;
 }
+EuclideanVector::EuclideanVector() :EuclideanVector(0) {}
 
 EuclideanVector::EuclideanVector(unsigned int n, double d) : EuclideanVector(n) {
     for (unsigned int i = 0; i < n; i++) {
@@ -33,6 +34,13 @@ EuclideanVector::EuclideanVector(const EuclideanVector& c) : EuclideanVector(c.g
         vector[i] = c[i];
     }
 }
+//EuclideanVector& EuclideanVector::operator=(const EuclideanVector& c) {
+//    return EuclideanVector(c);
+//}
+//
+//EuclideanVector& EuclideanVector::operator=(EuclideanVector&& c) {
+//    return EuclideanVector(c);
+//}
 
 EuclideanVector::EuclideanVector(EuclideanVector&& c) {
     vector = c.vector;
@@ -128,6 +136,10 @@ EuclideanVector EuclideanVector::operator* ( double other) const {
     product *= other;
     return product;
 }
+
+//EuclideanVector operator*(double other, const EuclideanVector& m) const {
+//    return m* other;
+//}
 //
 EuclideanVector EuclideanVector::operator/ (double other) const {
     auto dividend =  EuclideanVector(*this);
