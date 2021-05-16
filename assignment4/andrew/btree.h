@@ -29,9 +29,9 @@ class btree {
   /** Hmm, need some iterator typedefs here... friends? **/
     friend class btree_iterator<T>;
     typedef btree_iterator<T> iterator;
+    typedef btree_iterator<T> const_iterator;
 
-    iterator begin(return iterator(getFirstVal()));
-    iterator end(return iterator(nullptr));
+
 
   /**
    * Constructs an empty btree.  Note that
@@ -112,7 +112,22 @@ class btree {
    * -- crbegin() 
    * -- crend() 
    */
-  
+  //todo
+    iterator begin() {
+        return iterator(nullptr); //todo getFirstVal()
+    }
+    iterator end() {
+        return iterator(nullptr);
+    }
+
+    const_iterator cbegin() const {
+        return const_iterator(nullptr);//todo getFirstVal()
+    }
+    const_iterator cend() const {
+        return const_iterator(nullptr);
+    }
+
+
   /**
     * Returns an iterator to the matching element, or whatever 
     * the non-const end() returns if the element could 
@@ -178,15 +193,78 @@ class btree {
   ~btree();
   
 private:
-private:
+
+    //todo
+    std::shared_ptr<T> getFirstVal() {
+        return nullptr;
+    }
     class BtreeNode {
         // what i reckon we'll do is have an initial value <T> that will be the first sub-bst,
         // then have a list or set of pair<T, BtreeNode>, where it corresponds like in the
         // picture. so really this is like set<pair<T, shared_ptr<BtreeNode>>>
         //  the T doesnt need to be a shared_ptr, right?
-
+    public:
+        std::shared_ptr<BtreeNode> first;
+        std::set<std::pair<std::shared_ptr<T>, std::shared_ptr<BtreeNode>>> l;
     };
-  // The details of your implementation go here
+
+/*
+ * reverse iterator
+ */
+
+//    typedef reverse_iterator<const_iterator> const_reverse_iterator;
+//    typedef reverse_iterator<iterator> reverse_iterator;
+//    reverse_iterator rbegin() {
+//        return reverse_iterator(end());
+//    }
+//    const_reverse_iterator rbegin() const {
+//        return const_reverse_iterator(end());
+//    }
+//    reverse_iterator rend() {
+//        return reverse_iterator(begin());
+//    }
+//    const_reverse_iterator rend() const {
+//        return const_reverse_iterator(begin());
+//    }
 };
 
+template<typename T> btree<T>::btree(size_t maxNodeElems) {
+
+}
+
+template<typename T> btree<T>::btree(const btree<T>& original){
+
+}
+
+
+template<typename T> btree<T>::btree(btree<T>&& original) {
+
+}
+//todo
+template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
+    return btree<T>();
+}
+//todo
+template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
+    return btree<T>();
+}
+//todo
+template<typename T> iterator btree<T>::find(const T& elem) {
+    return btree_iterator<T>::btree_iterator(nullptr);
+}
+//todo
+template<typename T> const_iterator btree<T>::find(const T& elem) const {
+    return btree_iterator<T>::btree_iterator(nullptr);
+}
+//todo
+template<typename T> std::pair<iterator, bool> btree<T>::insert(const T& elem) {
+    return {return btree_iterator<T>::btree_iterator(nullptr), true};
+}
+template<typename T> btree<T>::~btree() {
+
+}
+
+template<typename T> std::ostream& btree<T>::operator<< <T> (std::ostream& os, const btree<T>& tree){
+    return os;
+}
 #endif

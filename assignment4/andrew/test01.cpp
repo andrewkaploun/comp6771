@@ -28,6 +28,7 @@ using std::ifstream;
 using std::ofstream;
 using std::set;
 using std::string;
+using namespace std;
 
 namespace {
 

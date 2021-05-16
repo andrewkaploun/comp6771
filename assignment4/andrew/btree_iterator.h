@@ -2,6 +2,8 @@
 #define BTREE_ITERATOR_H
 
 #include <iterator>
+#include "btree.h"
+
 
 /**
  * You MUST implement the btree iterators as (an) external class(es) in this file.
@@ -27,6 +29,28 @@ public:
     btree_iterator& operator++();
     bool operator==(const btree_iterator& other) const;
     bool operator!=(const btree_iterator& other) const { return !operator==(other); }
-//    btree_iterator(typename btree<T>::)
+    explicit btree_iterator(typename std::shared_ptr<T> p = nullptr) : p_(p) {}
+private:
+    typename std::shared_ptr<T> p_;
+
 };
+
+
+template <typename T> typename btree_iterator<T>::reference btree_iterator<T>::operator*() const {
+    return *p_;
+}
+
+template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
+    assert(p_ != nullptr);
+    p_ = btree<T>::next(p_);
+    return *this;
+}
+
+template <typename T> bool btree_iterator<T>::operator==(const btree_iterator<T>& other) const {
+    return p_ == other.p_;
+}
+
+
+
+
 #endif
