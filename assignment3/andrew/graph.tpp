@@ -191,11 +191,13 @@ return an rvalue reference? (like move a thing i hope?)
         std::vector<std::pair<int, N>> degreeAndLabel;
         for (auto it : labelToNode) {
             int n = 0;
-            for (auto bucket :outgoing.find(it.second)->second) {
-                if (bucket.second.size()) {
-                    n++;
+            auto it2 = outgoing.find(it.second);
+            if (it2 != outgoing.end())
+                for (auto bucket :it2->second) {
+                    if (bucket.second.size()) {
+                        n++;
+                    }
                 }
-            }
             degreeAndLabel.push_back({n, *(it.first)});
         }
         std::sort(degreeAndLabel.begin(), degreeAndLabel.end());
@@ -211,13 +213,15 @@ return an rvalue reference? (like move a thing i hope?)
         }
         std::vector<std::pair<E, N>> v;
         std::cout<< "Edges attached to Node "<< val << std::endl;
+        auto graphNode = labelToNode.find(str)->second;
+        auto outgoingIt = outgoing.find(graphNode);
+        if (outgoingIt != outgoing.end())
+            for (auto p: outgoingIt->second) {
+                for (auto e : p.second) {
+                    v.push_back(std::make_pair(*e, *(p.first->val.lock())));
+                }
 
-        for (auto p: outgoing.find(labelToNode.find(str)->second)->second) {
-            for (auto e : p.second) {
-                v.push_back(std::make_pair(*e, *(p.first->val.lock())));
             }
-
-        }
         if (!v.size()) {
             std::cout << "(null)"<<std::endl;
             return;
@@ -247,11 +251,13 @@ return an rvalue reference? (like move a thing i hope?)
         std::vector<std::pair<int, N>> degreeAndLabel;
         for (auto it : labelToNode) {
             int n = 0;
-            for (auto bucket :outgoing.find(it.second)->second) {
-                if (bucket.second.size()) {
-                    n++;
+            auto it2 = outgoing.find(it.second);
+            if (it2 != outgoing.end())
+                for (auto bucket :it2->second) {
+                    if (bucket.second.size()) {
+                        n++;
+                    }
                 }
-            }
             degreeAndLabel.push_back({n, *(it.first)});
         }
         std::sort(degreeAndLabel.begin(), degreeAndLabel.end());
