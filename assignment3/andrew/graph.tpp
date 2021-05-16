@@ -33,7 +33,6 @@ return an rvalue reference? (like move a thing i hope?)
     template<typename N, typename E> bool Graph<N, E>::addNode(const N& val) {
         std::shared_ptr<N> n = std::make_shared<N>(val);
         if (labelToNode.count(n) /*&&  *(it->first) == *n  */) {
-
             return false;
         }
 
@@ -53,7 +52,6 @@ return an rvalue reference? (like move a thing i hope?)
         std::shared_ptr<GraphNode> dNode = labelToNode[d];
 
         if (outgoing[sNode][dNode].count(e)) {
-
             return false;
         }
 
@@ -95,22 +93,14 @@ return an rvalue reference? (like move a thing i hope?)
                 oldOutgoing.push_back({p.first, *pp });
             }
         }
-//auto oldOutgoing         (outgoing[oldNode].begin(),
-//                                                                                            outgoing[oldNode].end());
 
         for (auto edge : oldOutgoing) {
             auto otherNode = edge.first;
             auto e = edge.second;
-//            for (auto ep : e) {
                 deleteEdge(*(oldNode->val.lock()), *(otherNode->val.lock()), e);
                 addEdge(*(newNode->val.lock()), *(otherNode->val.lock()),e);
-//            }
         }
 
-
-
-//        std::vector<std::pair<std::shared_ptr<GraphNode>, std::set<std::shared_ptr<E>>>> oldIncoming (incoming[oldNode].begin(),
-//                                                                                            incoming[oldNode].end());
         std::vector<std::pair<std::shared_ptr<GraphNode>, E>> oldIncoming;
 
         for (auto p : incoming[oldNode]) {
@@ -121,21 +111,17 @@ return an rvalue reference? (like move a thing i hope?)
         for (auto edge : oldIncoming) {
             auto otherNode = edge.first;
             auto e = edge.second;
-
-//            for (auto ep : e) {
                 deleteEdge(*(otherNode->val.lock()), *(oldNode->val.lock()), e);
                 addEdge(*(otherNode->val.lock()), *(newNode->val.lock()), e);
-//            }
         }
-
 
         // Then, call deleteNode on old
         deleteNode(oldData);
     }
+
     template<typename N, typename E> void Graph<N, E>::deleteNode(const N& n) noexcept {
         auto val = std::make_shared<N>(n);
         if (labelToNode.count(val)) {
-
             auto node = labelToNode[val];
 
             std::vector<std::shared_ptr<GraphNode>> neighbors;
@@ -275,6 +261,3 @@ return an rvalue reference? (like move a thing i hope?)
         }
 
     }
-
-
-// };
