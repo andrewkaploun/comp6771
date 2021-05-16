@@ -200,9 +200,7 @@ return an rvalue reference? (like move a thing i hope?)
             auto it2 = outgoing.find(it.second);
             if (it2 != outgoing.end())
                 for (auto bucket :it2->second) {
-                    if (bucket.second.size()) {
-                        n++;
-                    }
+                    n+= bucket.second.size();
                 }
             degreeAndLabel.push_back({n, *(it.first)});
         }
