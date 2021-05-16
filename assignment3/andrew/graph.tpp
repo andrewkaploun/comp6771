@@ -189,7 +189,7 @@ return an rvalue reference? (like move a thing i hope?)
         if (it1 == outgoing.end()) return false;
         auto it2 = it1->second.find(dst2);
         if (it2 == it1->second.end()) return false;
-        return it2->second.empty();
+        return !it2->second.empty();
 //        return !outgoing[src2][dst2].empty();
 
     }
