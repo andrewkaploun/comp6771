@@ -42,7 +42,7 @@ void movecopyoperator_tests() {
 	stream << d2 << std::endl;
     stream << tmp << std::endl;
 
-
+std::cout << " stream str = "<<stream.str();
     std::string output_result = "[1 2 3 4 5]\n"
                                 "[1 2 3 4 5]\n"
                                 "1\n"

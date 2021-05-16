@@ -21,8 +21,22 @@ public:
     EuclideanVector(std::list<double> l);
     EuclideanVector(std::initializer_list<double> l);
     EuclideanVector(const EuclideanVector& c);
-    EuclideanVector& operator=(const EuclideanVector& ) = default;
-    EuclideanVector& operator=(EuclideanVector&& ) = default;
+    EuclideanVector& operator=(const EuclideanVector& c)  {
+        size = c.getNumDimensions();
+        vector = new double [size];
+        for (unsigned int i = 0; i < c.getNumDimensions(); i++) {
+            vector[i] = c[i];
+        }
+        return *this;
+    };
+    EuclideanVector& operator=(EuclideanVector&&c ) {
+        this->vector = c.vector;
+        this->size= c.size;
+
+        c.vector = nullptr;
+        c.size = 0;
+        return *this;
+    }
     EuclideanVector(EuclideanVector&& c);
 
     // this ends up beigna  better approach since templates mean that the compilation fails on EuclidenaVector(0,0);

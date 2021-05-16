@@ -54,8 +54,8 @@ EuclideanVector::EuclideanVector(const EuclideanVector& c) : EuclideanVector(c.g
 //}
 
 EuclideanVector::EuclideanVector(EuclideanVector&& c) {
-    vector = c.vector;
-    size = c.size;
+    this->vector = c.vector;
+    this->size = c.size;
 
     // now c will get destroyed
     c.vector = nullptr;
@@ -65,6 +65,7 @@ EuclideanVector::EuclideanVector(EuclideanVector&& c) {
 
 EuclideanVector::~EuclideanVector() {
     // if (size != 0)
+    std::cout << " deleting "<<(unsigned long long) vector <<"of size "<<size<<" is "<<*this<<std::endl;
         delete [] vector;
 }
 
