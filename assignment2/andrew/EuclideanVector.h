@@ -22,6 +22,8 @@ public:
     EuclideanVector(std::initializer_list<double> l);
     EuclideanVector(const EuclideanVector& c);
     EuclideanVector& operator=(const EuclideanVector& c)  {
+        if (c.vector == vector) return *this;
+            // todo handle case where this already has a value
         size = c.getNumDimensions();
         vector = new double [size];
         for (unsigned int i = 0; i < c.getNumDimensions(); i++) {
