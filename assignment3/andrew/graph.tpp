@@ -191,7 +191,7 @@ return an rvalue reference? (like move a thing i hope?)
         std::vector<std::pair<int, N>> degreeAndLabel;
         for (auto it : labelToNode) {
             int n = 0;
-            for (auto bucket :outgoing[(it.second)]) {
+            for (auto bucket :outgoing.find(it.second)->second) {
                 if (bucket.second.size()) {
                     n++;
                 }
@@ -212,7 +212,7 @@ return an rvalue reference? (like move a thing i hope?)
         std::vector<std::pair<E, N>> v;
         std::cout<< "Edges attached to Node "<< val << std::endl;
 
-        for (auto p: outgoing[labelToNode[str]]) {
+        for (auto p: outgoing.find(labelToNode.find(str)->second)->second) {
             for (auto e : p.second) {
                 v.push_back(std::make_pair(*e, *(p.first->val.lock())));
             }
@@ -247,7 +247,7 @@ return an rvalue reference? (like move a thing i hope?)
         std::vector<std::pair<int, N>> degreeAndLabel;
         for (auto it : labelToNode) {
             int n = 0;
-            for (auto bucket :outgoing[(it.second)]) {
+            for (auto bucket :outgoing.find(it.second)->second) {
                 if (bucket.second.size()) {
                     n++;
                 }
