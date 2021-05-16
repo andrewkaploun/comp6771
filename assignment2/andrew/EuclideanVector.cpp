@@ -20,7 +20,7 @@ EuclideanVector::EuclideanVector(unsigned int n) {
     for (unsigned int i = 0; i < n; i++)
         vector[i] = 0;
 }
-EuclideanVector::EuclideanVector() :EuclideanVector(0) {}
+EuclideanVector::EuclideanVector() :EuclideanVector(1) {}
 
 EuclideanVector::EuclideanVector(unsigned int n, double d) : EuclideanVector(n) {
     for (unsigned int i = 0; i < n; i++) {
