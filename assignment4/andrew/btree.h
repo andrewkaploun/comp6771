@@ -27,7 +27,12 @@ class btree {
 
  public:
   /** Hmm, need some iterator typedefs here... friends? **/
- 
+    friend class btree_iterator<T>;
+    typedef btree_iterator<T> iterator;
+
+    iterator begin(return iterator(getFirstVal()));
+    iterator end(return iterator(nullptr));
+
   /**
    * Constructs an empty btree.  Note that
    * the elements stored in your btree must
