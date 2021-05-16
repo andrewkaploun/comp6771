@@ -24,6 +24,10 @@ public:
     EuclideanVector& operator=(const EuclideanVector& c)  {
         if (c.vector == vector) return *this;
             // todo handle case where this already has a value
+        //ok this is for if we have stuff allocated:
+        delete[] vector;
+
+
         size = c.getNumDimensions();
         vector = new double [size];
         for (unsigned int i = 0; i < c.getNumDimensions(); i++) {
@@ -32,6 +36,11 @@ public:
         return *this;
     };
     EuclideanVector& operator=(EuclideanVector&&c ) {
+
+        //ok this is for if we have stuff allocated:
+        delete[] vector;
+
+
         this->vector = c.vector;
         this->size= c.size;
 
