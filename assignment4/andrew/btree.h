@@ -117,17 +117,17 @@ class btree {
    */
   //todo
     iterator begin() const {
-        return iterator(nullptr, (this)); //todo getFirstVal()
+        return iterator(nullptr, (root)); //todo getFirstVal()
     }
     iterator end() const {
-        return iterator(nullptr, (this));
+        return iterator(nullptr, (root));
     }
 
     const_iterator cbegin() const {
-        return const_iterator(nullptr, (this));//todo getFirstVal()
+        return const_iterator(nullptr, (root));//todo getFirstVal()
     }
     const_iterator cend() const {
-        return const_iterator(nullptr, (this));
+        return const_iterator(nullptr, (root));
     }
 
 
@@ -146,7 +146,7 @@ class btree {
     *         non-const end() returns if no such match was ever found.
     */
   iterator find(const T& elem) {
-      return iterator(nullptr, (this));
+      return iterator(nullptr, (root));
   }
     
   /**
@@ -159,7 +159,7 @@ class btree {
     *         const end() returns if no such match was ever found.
     */
   const_iterator find(const T& elem) const {
-      return const_iterator(nullptr, (this));
+      return const_iterator(nullptr, (root));
   }
       
   /**
@@ -190,7 +190,7 @@ class btree {
     *         because no matching element was there prior to the insert call.
     */
   std::pair<iterator, bool> insert(const T& elem){
-      return {iterator(nullptr, (this)), true};
+      return {iterator(nullptr, (root)), true};
   }
 
   /**
@@ -233,13 +233,17 @@ private:
       public:
         std::shared_ptr<BtreeNode> first;
         std::set<std::pair<std::shared_ptr<T>, std::shared_ptr<BtreeNode>>> l;
+
+        std::shared_ptr<T> next(std::shared_ptr<T> p) const {
+            return p;
+        }
     };
 
     std::shared_ptr<T> next(std::shared_ptr<T> p) const {
         return p;
     }
 
-
+    std::shared_ptr<BtreeNode> root;
 
 };
 

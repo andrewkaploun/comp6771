@@ -29,10 +29,11 @@ public:
     btree_iterator& operator++();
     bool operator==(const btree_iterator& other) const;
     bool operator!=(const btree_iterator& other) const { return !operator==(other); }
-    explicit btree_iterator(typename std::shared_ptr<T> p = nullptr, const btree<T>* tree_ = nullptr) : p_(p), tree(tree_) {}
+    explicit btree_iterator(typename std::shared_ptr<T> p = nullptr,
+        const std::shared_ptr<typename btree<T>::BtreeNode> root_ = nullptr) : p_(p), root(root_) {}
 private:
     typename std::shared_ptr<T> p_;
-    const  btree<T>* tree;
+    const  std::shared_ptr<typename btree<T>::BtreeNode> root;
 
 };
 
@@ -43,7 +44,7 @@ template <typename T> typename btree_iterator<T>::reference btree_iterator<T>::o
 
 template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
     assert(p_ != nullptr);
-    p_ = tree->next(p_);
+    p_ = root->next(p_);
     return *this;
 }
 
