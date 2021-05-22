@@ -117,17 +117,17 @@ class btree {
    */
   //todo
     iterator begin() const {
-        return iterator(nullptr); //todo getFirstVal()
+        return iterator(nullptr, (this)); //todo getFirstVal()
     }
     iterator end() const {
-        return iterator(nullptr);
+        return iterator(nullptr, (this));
     }
 
     const_iterator cbegin() const {
-        return const_iterator(nullptr);//todo getFirstVal()
+        return const_iterator(nullptr, (this));//todo getFirstVal()
     }
     const_iterator cend() const {
-        return const_iterator(nullptr);
+        return const_iterator(nullptr, (this));
     }
 
 
@@ -146,7 +146,7 @@ class btree {
     *         non-const end() returns if no such match was ever found.
     */
   iterator find(const T& elem) {
-      return iterator(nullptr);
+      return iterator(nullptr, (this));
   }
     
   /**
@@ -159,7 +159,7 @@ class btree {
     *         const end() returns if no such match was ever found.
     */
   const_iterator find(const T& elem) const {
-      return const_iterator(nullptr);
+      return const_iterator(nullptr, (this));
   }
       
   /**
@@ -190,7 +190,7 @@ class btree {
     *         because no matching element was there prior to the insert call.
     */
   std::pair<iterator, bool> insert(const T& elem){
-      return {iterator(nullptr), true};
+      return {iterator(nullptr, (this)), true};
   }
 
   /**
@@ -204,20 +204,21 @@ class btree {
    * reverse iterator
    */
 
-//    typedef reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;
     reverse_iterator rbegin() {
         return reverse_iterator(end());//return the last element
     }
-//    const_reverse_iterator rbegin() const {
-//        return const_reverse_iterator(end());
-//    }
+    const_reverse_iterator rbegin() const {
+        return const_reverse_iterator(end());
+    }
     reverse_iterator rend() {
         return reverse_iterator(begin());
     }
-//    const_reverse_iterator rend() const {
-//        return const_reverse_iterator(begin());
-//    }
+    const_reverse_iterator rend() const {
+        return const_reverse_iterator(begin());
+    }
+
 private:
 
     //todo
@@ -229,10 +230,15 @@ private:
         // then have a list or set of pair<T, BtreeNode>, where it corresponds like in the
         // picture. so really this is like set<pair<T, shared_ptr<BtreeNode>>>
         //  the T doesnt need to be a shared_ptr, right?
-    public:
+      public:
         std::shared_ptr<BtreeNode> first;
         std::set<std::pair<std::shared_ptr<T>, std::shared_ptr<BtreeNode>>> l;
     };
+
+    std::shared_ptr<T> next(std::shared_ptr<T> p) const {
+        return p;
+    }
+
 
 
 };
