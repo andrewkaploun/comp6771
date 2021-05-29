@@ -13,7 +13,7 @@ CXXFLAGS = -Wall -Werror -O2 -std=c++14 -fsanitize=address -g
 SOURCES = $(wildcard *.cpp)
 OBJECTS = $(subst .cpp,,$(SOURCES))
 
-default: test03
+default: cseTests
 
 ## using this target will automagically compile all the *.cpp
 ## files (hopefully tests) found in the current directory into

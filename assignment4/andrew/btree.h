@@ -239,13 +239,13 @@ class btree {
     reverse_iterator rbegin() {
         return reverse_iterator(end());//return the last element
     }
-    const_reverse_iterator rbegin() const {
+    const_reverse_iterator crbegin() const {
         return const_reverse_iterator(end());
     }
     reverse_iterator rend() {
         return reverse_iterator(begin());
     }
-    const_reverse_iterator rend() const {
+    const_reverse_iterator crend() const {
         return const_reverse_iterator(begin());
     }
 
