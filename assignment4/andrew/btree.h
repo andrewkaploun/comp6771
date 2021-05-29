@@ -427,36 +427,36 @@ template<typename T> btree<T>::btree(size_t maxNodeElems) {
 
 }
 
-template<typename T> btree<T>::btree(const btree<T>& original)
-{
+// todo
+template<typename T> btree<T>::btree(const btree<T>& original) = default;
+//{
+//
+//}
 
-}
 
-
-template<typename T> btree<T>::btree(btree<T>&& original) {
-
-}
 //todo
+template<typename T> btree<T>::btree(btree<T>&& original) = default;
+//{
+//
+//}
 template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
-    return btree<T>();
+    btree<T> new_btree(rhs);
+    return new_btree;
 }
-//todo
 template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
-    return btree<T>();
+    btree<T> new_btree(rhs);
+    return new_btree;
 }
 
 
-////todo
 template<typename T> btree_iterator<T> btree<T>::find(const T& elem) {
     return typename btree_iterator<T>::btree_iterator( root->find(elem), root);
 }
-////todo
 template<typename T> btree_iterator<T> btree<T>::find(const T& elem) const {
 //    auto value =;
 
     return typename btree_iterator<T>::btree_iterator( root->find(elem), root);
 }
-//todo
 template<typename T> std::pair<btree_iterator<T>, bool> btree<T>::insert(const T& elem) {
     auto p = root->insert(elem);
     return { typename btree_iterator<T>::btree_iterator(p.first, root), p.second};
