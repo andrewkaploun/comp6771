@@ -100,7 +100,8 @@ class btree {
    * @return a reference to os
    */
 //  template<typename T>
-  friend std::ostream& operator<< (std::ostream& os, const btree<T>& tree) {
+  friend std::ostream& operator<< (std::ostream& os, const btree<T>& tree)
+  {
       return os;
   }
 
@@ -145,10 +146,11 @@ class btree {
     * @return an iterator to the matching element, or whatever the
     *         non-const end() returns if no such match was ever found.
     */
-  iterator find(const T& elem) {
-      return iterator(nullptr, (root));
-  }
-    
+  iterator find(const T& elem) ;
+//  {
+//      return iterator(nullptr, (root));
+//  }
+//
   /**
     * Identical in functionality to the non-const version of find, 
     * save the fact that what's pointed to by the returned iterator
@@ -158,9 +160,11 @@ class btree {
     * @return an iterator to the matching element, or whatever the
     *         const end() returns if no such match was ever found.
     */
-  const_iterator find(const T& elem) const {
-      return const_iterator(nullptr, (root));
-  }
+  const_iterator find(const T& elem) const
+  ;
+//  {
+//      return const_iterator(nullptr, (root));
+//  }
       
   /**
     * Operation which inserts the specified element
@@ -189,9 +193,11 @@ class btree {
     *         stores true if and only if the element needed to be added 
     *         because no matching element was there prior to the insert call.
     */
-  std::pair<iterator, bool> insert(const T& elem){
-      return {iterator(nullptr, (root)), true};
-  }
+  std::pair<iterator, bool> insert(const T& elem)
+  ;
+//      {
+//          return {iterator(nullptr, (root)), true};
+//      }
 
   /**
     * Disposes of all internal resources, which includes
@@ -220,7 +226,7 @@ class btree {
     }
 
 private:
-
+    size_t max_node_elems;
     //todo
     std::shared_ptr<T> getFirstVal() {
         return nullptr;
@@ -248,7 +254,7 @@ private:
 };
 
 template<typename T> btree<T>::btree(size_t maxNodeElems) {
-
+    max_node_elems = maxNodeElems;
 }
 
 template<typename T> btree<T>::btree(const btree<T>& original){
@@ -267,18 +273,20 @@ template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
 template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
     return btree<T>();
 }
+
+
 ////todo
-//template<typename T> btree_iterator<T> btree<T>::find(const T& elem) {
-//    return btree_iterator<T>::btree_iterator(nullptr);
-//}
+template<typename T> btree_iterator<T> btree<T>::find(const T& elem) {
+    return typename btree_iterator<T>::btree_iterator(nullptr, root);
+}
 ////todo
-//template<typename T> btree_iterator<T> btree<T>::find(const T& elem) const {
-//    return btree_iterator<T>::btree_iterator(nullptr);
-//}
+template<typename T> btree_iterator<T> btree<T>::find(const T& elem) const {
+    return typename btree_iterator<T>::btree_iterator(nullptr, root);
+}
 //todo
-//template<typename T> std::pair<btree_iterator<T>, bool> btree<T>::insert(const T& elem) {
-//    return { btree_iterator<T>::btree_iterator(nullptr), true};
-//}
+template<typename T> std::pair<btree_iterator<T>, bool> btree<T>::insert(const T& elem) {
+    return { typename btree_iterator<T>::btree_iterator(nullptr, root), true};
+}
 template<typename T> btree<T>::~btree() {
 
 }
