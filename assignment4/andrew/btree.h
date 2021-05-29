@@ -226,23 +226,162 @@ class btree {
     }
 
 private:
+    struct SharedComparatorN {
+        bool operator()(const std::shared_ptr<T>& lhs,
+                        const std::shared_ptr<T>& rhs) const
+        {
+            return *lhs < *rhs;
+        }
+    };
+
     size_t max_node_elems;
     //todo
     std::shared_ptr<T> getFirstVal() {
-        return nullptr;
+        return root->smallest();
     }
+    // invariant: only the root can be empty.
+    // be empty
+    // invariant: things only point to lower nodes if they have filled up to their max size
     class BtreeNode {
         // what i reckon we'll do is have an initial value <T> that will be the first sub-bst,
         // then have a list or set of pair<T, BtreeNode>, where it corresponds like in the
         // picture. so really this is like set<pair<T, shared_ptr<BtreeNode>>>
         //  the T doesnt need to be a shared_ptr, right?
-      public:
-        std::shared_ptr<BtreeNode> first;
-        std::set<std::pair<std::shared_ptr<T>, std::shared_ptr<BtreeNode>>> l;
 
-        std::shared_ptr<T> next(std::shared_ptr<T> p) const {
-            return p;
+
+      public:
+
+        BtreeNode(size_t max_node_elems_) : max_node_elems(max_node_elems_)
+
+        ,l(std::map<std::shared_ptr<T>, std::shared_ptr<BtreeNode>, SharedComparatorN>{})
+        {first = nullptr;}
+
+        std::shared_ptr<BtreeNode> first;
+        size_t max_node_elems;
+        std::map<std::shared_ptr<T>, std::shared_ptr<BtreeNode>, SharedComparatorN> l;
+
+
+
+        std::shared_ptr<T> smallest() const {
+            if (!l.size()) {
+                return nullptr;
+            }
+            if (first != nullptr) {
+
+                return first.smallest();
+            }
+            return l.begin()->first;
         }
+        std::shared_ptr<T> next(std::shared_ptr<T> p) const {
+            /*
+             *
+             * pseudocode:
+             * if p is in our list, get
+             *  - the smallest thing in the subtree that follows it, if it exists
+             *  - the next element in our list l, if it exists
+             *
+             *  otherwise return null
+             *
+             *  then, lets say p isnt in our list.
+              get the next() for the node with  p in it. if this returned a result, return it, otherwise:
+              return the first node thats next, and if it doesnt exist, return null
+
+
+             *
+             *
+             */
+            //std::prev(l.upper_bound(p),1) is the  latest thing equal to or before
+            if (!l.size()) {
+                return nullptr;
+            }
+            if (l.lower_bound(p) == l.end()) {
+                return l.rbegin()->second->next(p);
+            }
+            if (l.upper_bound(p) == l.begin()) {
+                if (first == nullptr) {
+                    return l.upper_bound(p)->first;
+                }
+                auto maybe_null  = first->next(p);
+
+                if (maybe_null == nullptr) {
+                    return l.upper_bound(p)->first;
+                }
+                return maybe_null;
+            }
+            auto it = std::prev(l.upper_bound(p),1);
+            if (it->first == p) {
+                if (it->second != nullptr) {
+                    return  smallest(it->second);
+                } else if (std::next(it, 1) != l.end()) {
+                    return std::next(it, 1)->first;
+                } else {
+                    return nullptr;
+                }
+            } else {
+                if (it->second != nullptr) {
+                    auto maybe_null = it->second->next(p);
+
+                    if (maybe_null != nullptr) {
+                        return maybe_null;
+                    }
+
+                }
+                if (std::next(it, 1) != l.end()) {
+                    return std::next(it, 1)->first;
+                } else {
+                    return nullptr;
+                }
+            }
+
+
+        }
+        std::shared_ptr<T> find (const T& elem) const {
+            if (!l.size()) {
+                return nullptr;
+            }
+            if (elem < *(l.begin()->first)) {
+                if (first == nullptr) {//l.begin()->second->find(elem);
+                    return nullptr;
+                }
+                return first->find(elem);
+            }
+            auto it = std::prev(l.upper_bound(std::make_shared<T>(elem)),1);
+            if (*(it->first) == elem) {
+                return it->first;
+            }
+            if (it->second != nullptr) {
+                return (it->second)->find(elem);
+            }
+            return nullptr;
+        }
+
+        std::pair<std::shared_ptr<T>, bool> insert(const T& elem) {
+            if (l.size() < max_node_elems) {
+                auto ptr = std::make_shared<T>(elem);
+                if (l.count(ptr)) {
+                    return {l.find(ptr)->first, false};
+                }
+                l[ptr] = nullptr;
+                return {ptr, true};
+            }
+            if (elem < *(l.begin()->first)) {
+                if (first == nullptr) {
+                    first = std::make_shared<BtreeNode>(max_node_elems);
+                }
+                return first->insert(elem);
+            }
+            auto it =  std::prev(l.upper_bound(std::make_shared<T>(elem)),1);
+            if (*(it->first) == elem) {
+                return {it->first, false};
+            }
+
+            if (l[it->first] == nullptr) {
+                l[it->first] = std::make_shared<BtreeNode>(max_node_elems);
+
+            }
+            return l[it->first]->insert(elem);
+        }
+
     };
 
     std::shared_ptr<T> next(std::shared_ptr<T> p) const {
@@ -255,9 +394,12 @@ private:
 
 template<typename T> btree<T>::btree(size_t maxNodeElems) {
     max_node_elems = maxNodeElems;
+
+    root = std::make_shared<BtreeNode>(max_node_elems);
+
 }
 
-template<typename T> btree<T>::btree(const btree<T>& original){
+template<typename T> btree<T>::btree(const btree<T>& original) {
 
 }
 
@@ -277,15 +419,18 @@ template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
 
 ////todo
 template<typename T> btree_iterator<T> btree<T>::find(const T& elem) {
-    return typename btree_iterator<T>::btree_iterator(nullptr, root);
+    return typename btree_iterator<T>::btree_iterator( root->find(elem), root);
 }
 ////todo
 template<typename T> btree_iterator<T> btree<T>::find(const T& elem) const {
-    return typename btree_iterator<T>::btree_iterator(nullptr, root);
+//    auto value =;
+
+    return typename btree_iterator<T>::btree_iterator( root->find(elem), root);
 }
 //todo
 template<typename T> std::pair<btree_iterator<T>, bool> btree<T>::insert(const T& elem) {
-    return { typename btree_iterator<T>::btree_iterator(nullptr, root), true};
+    auto p = root->insert(elem);
+    return { typename btree_iterator<T>::btree_iterator(p.first, root), p.second};
 }
 template<typename T> btree<T>::~btree() {
 
