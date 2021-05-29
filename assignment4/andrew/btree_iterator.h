@@ -26,8 +26,10 @@ public:
 
     reference operator*() const;
     pointer operator->() const { return &(operator*()); }
-    btree_iterator& operator++();
+    btree_iterator& operator++() ;
+    btree_iterator& operator++(int) ;
     btree_iterator& operator--();
+    btree_iterator& operator--(int);
     bool operator==(const btree_iterator& other) const;
     bool operator!=(const btree_iterator& other) const { return !operator==(other); }
     explicit btree_iterator(typename std::shared_ptr<T> p = nullptr,
@@ -49,7 +51,23 @@ template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
     return *this;
 }
 
+template <typename T> btree_iterator<T>& btree_iterator<T>::operator++(int) {
+    assert(p_ != nullptr);
+    p_ = root->next(p_);
+    return *this;
+}
+
+
 template <typename T> btree_iterator<T>& btree_iterator<T>::operator--() {
+//    assert(p_ != nullptr);
+    if (p_ == nullptr) {
+        p_ = (root->largest());
+    }
+    p_ = root->prev(p_);
+    return *this;
+}
+
+template <typename T> btree_iterator<T>& btree_iterator<T>::operator--(int) {
 //    assert(p_ != nullptr);
     if (p_ == nullptr) {
         p_ = (root->largest());
