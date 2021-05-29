@@ -83,7 +83,7 @@ class btree {
    *
    * @param original a const lvalue reference to a B-Tree object
    */
-  btree(const btree<T>& original);
+  btree(const btree<T>& original) = default;
 
   /** 
    * Move constructor
@@ -91,7 +91,7 @@ class btree {
    *
    * @param original an rvalue reference to a B-Tree object
    */
-  btree(btree<T>&& original);
+  btree(btree<T>&& original)= default;
   
   
   /** 
@@ -100,7 +100,7 @@ class btree {
    *
    * @param rhs a const lvalue reference to a B-Tree object
    */
-  btree<T>& operator=(const btree<T>& rhs);
+  btree<T>& operator=(const btree<T>& rhs)= default;
 
   /** 
    * Move assignment
@@ -109,7 +109,7 @@ class btree {
    *
    * @param rhs a const reference to a B-Tree object
    */
-  btree<T>& operator=(btree<T>&& rhs);
+  btree<T>& operator=(btree<T>&& rhs)= default;
 
   /**
    * Puts a breadth-first traversal of the B-Tree onto the output
@@ -482,9 +482,9 @@ private:
 
     };
 
-//    std::shared_ptr<T> next(std::shared_ptr<T> p) const {
-//        return p;
-//    }
+    std::shared_ptr<T> next(std::shared_ptr<T> p) const {
+        return p;
+    }
 
     std::shared_ptr<BtreeNode> root;
 
@@ -498,26 +498,26 @@ template<typename T> btree<T>::btree(size_t maxNodeElems) {
 }
 
 // todo
-template<typename T> btree<T>::btree(const btree<T>& original) = default;
+//template<typename T> btree<T>::btree(const btree<T>& original) = default;
 //{
 //
 //}
 
 
 //todo
-template<typename T> btree<T>::btree(btree<T>&& original) = default;
+//template<typename T> btree<T>::btree(btree<T>&& original) = default;
 //{
 //
 //}
-template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
-//    btree<T> thing = btree<T>(rhs);
-    *this = btree<T>(rhs);
-    return *this;
-}
-template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
-    *this = btree<T>(std::move(rhs));
-    return *this;
-}
+//template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
+////    btree<T> thing = btree<T>(rhs);
+//    *this = btree<T>(rhs);
+//    return *this;
+//}
+//template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
+//    *this = btree<T>(std::move(rhs));
+//    return *this;
+//}
 
 
 template<typename T> btree_iterator<T> btree<T>::find(const T& elem) {
