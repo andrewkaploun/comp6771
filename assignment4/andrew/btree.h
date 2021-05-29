@@ -277,8 +277,8 @@ private:
         ,l(std::map<std::shared_ptr<T>, std::shared_ptr<BtreeNode>, SharedComparatorN>{})
         {first = nullptr;
 //        l = std::map<std::shared_ptr<T>, std::shared_ptr<BtreeNode>, SharedComparatorN>{};
-        if (l.size() != 0)
-        p2("meme", l.size());
+//        if (l.size() != 0)
+//        p2("meme", l.size());
         }
 
         std::shared_ptr<BtreeNode> first;
@@ -293,7 +293,7 @@ private:
             }
             if (first != nullptr) {
 
-                return first.smallest();
+                return first->smallest();
             }
             return l.begin()->first;
         }
@@ -336,7 +336,7 @@ private:
             auto it = std::prev(l.upper_bound(p),1);
             if (it->first == p) {
                 if (it->second != nullptr) {
-                    return  smallest(it->second);
+                    return  it->second->smallest();
                 } else if (std::next(it, 1) != l.end()) {
                     return std::next(it, 1)->first;
                 } else {
