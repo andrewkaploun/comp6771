@@ -6,7 +6,8 @@
 CXX = g++
 
 ## compiler flags
-CXXFLAGS = -Wall -Werror -O2 -std=c++14 -fsanitize=address -g
+CXXFLAGS = -Wall -Werror  -std=c++14 -fsanitize=address -g
+## add -O2 for optimization later
 ## enable this for debugging
 #CXXFLAGS = -Wall -g
 

@@ -6,6 +6,27 @@
  * that stores m client elements partition the tree 
  * into m + 1 sorted subtrees.
  */
+#define DEBUG memez
+
+#ifdef DEBUG
+#define mem std::cout<<"meme\n";
+#define p1(a) std::cout<<#a<<"= "<<a<<std::endl
+#define p2(a, b) std::cout<<#a<<"= "<<a<<" "<<#b<<"= "<<b<<std::endl
+#define p3(a, b, c) std::cout<<#a<<"= "<<a<<" "<<#b<<"= "<<b<<" "<<#c<<"= "<<c<<std::endl
+#define p4(a, b, c, d) std::cout<<#a<<"= "<<a<<" "<<#b<<"= "<<b<<" "<<#c<<"= "<<c<<" "<<#d<<"= "<<d<<std::endl
+#define p5(a, b, c, d, e) std::cout<<#a<<"= "<<a<<" "<<#b<<"= "<<b<<" "<<#c<<"= "<<c<<" "<<#d<<"= "<<d<<" "<<#e<<"= "<<e<<std::endl
+#define pa(arr); for(int i = 0; i < arr.size(); i++) std::cout<< arr[i]<<" "; std::cout<<std::endl;
+#define pA(arr); for(int i = 0; i < arr.size(); i++) {for(int j = 0; j < arr[i].size(); j++)std::cout<<arr[i][j]; std::cout<<std::endl;}
+#else
+#define mem
+#define p1(a)
+#define p2(a, b)
+#define p3(a, b, c)
+#define p4(a, b, c, d)
+#define p5(a, b, c, d, e)
+#define pa(arr);
+#define pA(arr);
+#endif
 
 #ifndef BTREE_H
 #define BTREE_H
@@ -254,7 +275,11 @@ private:
         BtreeNode(size_t max_node_elems_) : max_node_elems(max_node_elems_)
 
         ,l(std::map<std::shared_ptr<T>, std::shared_ptr<BtreeNode>, SharedComparatorN>{})
-        {first = nullptr;}
+        {first = nullptr;
+//        l = std::map<std::shared_ptr<T>, std::shared_ptr<BtreeNode>, SharedComparatorN>{};
+        if (l.size() != 0)
+        p2("meme", l.size());
+        }
 
         std::shared_ptr<BtreeNode> first;
         size_t max_node_elems;
@@ -336,6 +361,7 @@ private:
 
         }
         std::shared_ptr<T> find (const T& elem) const {
+            p1(l.size());
             if (!l.size()) {
                 return nullptr;
             }
@@ -356,6 +382,8 @@ private:
         }
 
         std::pair<std::shared_ptr<T>, bool> insert(const T& elem) {
+//            if (l.size() != 0)
+//                p2("meme", l.size());
             if (l.size() < max_node_elems) {
                 auto ptr = std::make_shared<T>(elem);
                 if (l.count(ptr)) {
@@ -399,7 +427,8 @@ template<typename T> btree<T>::btree(size_t maxNodeElems) {
 
 }
 
-template<typename T> btree<T>::btree(const btree<T>& original) {
+template<typename T> btree<T>::btree(const btree<T>& original)
+{
 
 }
 
