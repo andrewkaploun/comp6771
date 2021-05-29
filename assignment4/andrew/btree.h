@@ -364,8 +364,8 @@ private:
 
         }
         std::shared_ptr<T> find (const T& elem) const {
-            p1(l.size());
-            p2("here looking for ", elem);
+//            p1(l.size());
+//            p2("here looking for ", elem);
             if (!l.size()) {
                 return nullptr;
             }
@@ -377,7 +377,7 @@ private:
             }
             auto it = std::prev(l.upper_bound(std::make_shared<T>(elem)),1);
             if (*(it->first) == elem) {
-                p1(elem);
+//                p1(elem);
                 return it->first;
             }
             if (it->second != nullptr) {
