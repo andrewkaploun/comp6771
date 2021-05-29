@@ -26,14 +26,19 @@ public:
 // oh lmao i just didnt do an assignemnt fo riterators
     reference operator*() const;
     pointer operator->() const { return &(operator*()); }
+
     btree_iterator& operator++() ;
-//    btree_iterator operator++(int) ;
+    btree_iterator operator++(int) ;
     btree_iterator& operator--();
-//    btree_iterator operator--(int);
+    btree_iterator operator--(int);
     bool operator==(const btree_iterator& other) const;
     bool operator!=(const btree_iterator& other) const { return !operator==(other); }
     explicit btree_iterator(typename std::shared_ptr<T> p = nullptr,
         const std::shared_ptr<typename btree<T>::BtreeNode> root_ = nullptr) : p_(p), root(root_) {}
+    btree_iterator& operator=(const btree_iterator& rhs) {
+        *this=     btree_iterator<T>(p_, root);
+        return *this;
+    }
 private:
     typename std::shared_ptr<T> p_;
     const  std::shared_ptr<typename btree<T>::BtreeNode> root;
@@ -51,12 +56,12 @@ template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
     return *this;
 }
 //
-//template <typename T> btree_iterator<T> btree_iterator<T>::operator++(int) {
-//    assert(p_ != nullptr);
-//    p_ = root->next(p_);
-//    return btree_iterator<T>(p_, root);
-//}
-//
+template <typename T> btree_iterator<T> btree_iterator<T>::operator++(int) {
+    assert(p_ != nullptr);
+    p_ = root->next(p_);
+    return btree_iterator<T>(p_, root);
+}
+
 
 template <typename T> btree_iterator<T>& btree_iterator<T>::operator--() {
 //    assert(p_ != nullptr);
@@ -67,14 +72,14 @@ template <typename T> btree_iterator<T>& btree_iterator<T>::operator--() {
     return *this;
 }
 //
-//template <typename T> btree_iterator<T> btree_iterator<T>::operator--(int) {
-////    assert(p_ != nullptr);
-//    if (p_ == nullptr) {
-//        p_ = (root->largest());
-//    }
-//    p_ = root->prev(p_);
-//    return btree_iterator<T>(p_, root);
-//}
+template <typename T> btree_iterator<T> btree_iterator<T>::operator--(int) {
+//    assert(p_ != nullptr);
+    if (p_ == nullptr) {
+        p_ = (root->largest());
+    }
+    p_ = root->prev(p_);
+    return btree_iterator<T>(p_, root);
+}
 
 template <typename T> bool btree_iterator<T>::operator==(const btree_iterator<T>& other) const {
     return p_ == other.p_;

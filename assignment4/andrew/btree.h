@@ -83,7 +83,7 @@ class btree {
    *
    * @param original a const lvalue reference to a B-Tree object
    */
-  btree(const btree<T>& original) = default;
+  btree(const btree<T>& original) ;
 
   /** 
    * Move constructor
@@ -91,7 +91,7 @@ class btree {
    *
    * @param original an rvalue reference to a B-Tree object
    */
-  btree(btree<T>&& original)= default;
+  btree(btree<T>&& original);
   
   
   /** 
@@ -100,7 +100,7 @@ class btree {
    *
    * @param rhs a const lvalue reference to a B-Tree object
    */
-  btree<T>& operator=(const btree<T>& rhs)= default;
+  btree<T>& operator=(const btree<T>& rhs);
 
   /** 
    * Move assignment
@@ -109,7 +109,7 @@ class btree {
    *
    * @param rhs a const reference to a B-Tree object
    */
-  btree<T>& operator=(btree<T>&& rhs)= default;
+  btree<T>& operator=(btree<T>&& rhs);
 
   /**
    * Puts a breadth-first traversal of the B-Tree onto the output
@@ -124,7 +124,13 @@ class btree {
   friend std::ostream& operator<< (std::ostream& os, const btree<T>& tree)
   {
       for(iterator iter = tree.begin(); iter != tree.end(); ++iter) {
-          os<< *iter<< ' ';
+          os<< *iter;
+
+//          ++iter;
+//          if (iter != tree.end())
+             os << ' ';
+//          --iter;
+          std::cout << " at a thing "<<*iter<<std::endl;
       }
       return os;
   }
@@ -236,13 +242,13 @@ class btree {
 
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;
-    reverse_iterator rbegin() {
+    reverse_iterator rbegin() const {
         return reverse_iterator(end());//return the last element
     }
     const_reverse_iterator crbegin() const {
         return const_reverse_iterator(end());
     }
-    reverse_iterator rend() {
+    reverse_iterator rend() const {
         return reverse_iterator(begin());
     }
     const_reverse_iterator crend() const {
@@ -498,26 +504,26 @@ template<typename T> btree<T>::btree(size_t maxNodeElems) {
 }
 
 // todo
-//template<typename T> btree<T>::btree(const btree<T>& original) = default;
+template<typename T> btree<T>::btree(const btree<T>& original) = default;
 //{
 //
 //}
 
 
 //todo
-//template<typename T> btree<T>::btree(btree<T>&& original) = default;
+template<typename T> btree<T>::btree(btree<T>&& original) = default;
 //{
 //
 //}
-//template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
-////    btree<T> thing = btree<T>(rhs);
-//    *this = btree<T>(rhs);
-//    return *this;
-//}
-//template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
-//    *this = btree<T>(std::move(rhs));
-//    return *this;
-//}
+template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
+//    btree<T> thing = btree<T>(rhs);
+    *this = btree<T>(rhs);
+    return *this;
+}
+template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
+    *this = btree<T>(std::move(rhs));
+    return *this;
+}
 
 
 template<typename T> btree_iterator<T> btree<T>::find(const T& elem) {
