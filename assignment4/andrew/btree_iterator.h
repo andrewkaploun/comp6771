@@ -27,6 +27,7 @@ public:
     reference operator*() const;
     pointer operator->() const { return &(operator*()); }
     btree_iterator& operator++();
+    btree_iterator& operator--();
     bool operator==(const btree_iterator& other) const;
     bool operator!=(const btree_iterator& other) const { return !operator==(other); }
     explicit btree_iterator(typename std::shared_ptr<T> p = nullptr,
@@ -45,6 +46,15 @@ template <typename T> typename btree_iterator<T>::reference btree_iterator<T>::o
 template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
     assert(p_ != nullptr);
     p_ = root->next(p_);
+    return *this;
+}
+
+template <typename T> btree_iterator<T>& btree_iterator<T>::operator--() {
+//    assert(p_ != nullptr);
+    if (p_ == nullptr) {
+        return *(root->largest());
+    }
+    p_ = root->prev(p_);
     return *this;
 }
 
@@ -68,6 +78,7 @@ public:
      reference operator*() const;
      pointer operator->() const { return &(operator*()); }
     const_btree_iterator& operator++();
+    const_btree_iterator& operator--();
     bool operator==(const const_btree_iterator& other) const;
     bool operator!=(const const_btree_iterator& other) const { return !operator==(other); }
     explicit const_btree_iterator(typename std::shared_ptr<T> p = nullptr) : p_(p) {}
@@ -82,6 +93,14 @@ template <typename T> typename const_btree_iterator<T>::reference const_btree_it
 }
 
 template <typename T> const_btree_iterator<T>& const_btree_iterator<T>::operator++() {
+    assert(p_ != nullptr);
+    p_ = btree<T>::next(p_);
+    return *this;
+}
+
+template <typename T> const_btree_iterator<T>& const_btree_iterator<T>::operator--() {
+// todo: we dont ever actually use this, right? i hope? rip
+
     assert(p_ != nullptr);
     p_ = btree<T>::next(p_);
     return *this;

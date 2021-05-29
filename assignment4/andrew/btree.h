@@ -300,6 +300,17 @@ private:
             }
             return l.begin()->first;
         }
+
+        std::shared_ptr<T> largest() const {
+            if (!l.size()) {
+                return nullptr;
+            }
+
+            if (l.rbegin()->second != nullptr) {
+                return l.rbegin()->second->largest();
+            }
+            return l.rbegin()->first;
+        }
         std::shared_ptr<T> next(std::shared_ptr<T> p) const {
             /*
              *
@@ -323,7 +334,7 @@ private:
                 return nullptr;
             }
             if (l.lower_bound(p) == l.end()) {
-                return l.rbegin()->second->next(p);
+                return l.rbegin()->second->next(p);//probably dont need this idk, probably fucks up my time
             }
             if (l.upper_bound(p) == l.begin()) {
                 if (first == nullptr) {
@@ -363,6 +374,60 @@ private:
 
 
         }
+
+        std::shared_ptr<T> prev(std::shared_ptr<T> p) const {
+
+            if (!l.size()) {
+                return nullptr;
+            }
+            if (l.lower_bound(p) == l.begin()) {
+                if (first == nullptr) {
+                    return nullptr;
+                }
+                return first->prev(p);
+            }
+            //here
+            if (l.lower_bound(p) == l.end()) {//here
+                if (l.rbegin()->second == nullptr) {
+                    return l.rbegin()->first;
+                }
+                auto maybe_null  = l.rbegin()->second->prev(p);
+
+                if (maybe_null == nullptr) {
+                    return l.rbegin()->first;
+                }
+                return maybe_null;
+            }
+            //here
+            auto it = std::prev(l.lower_bound(p),1);// first thing lower than p
+//            if (it->first == p) {
+//                if (it->second != nullptr) {
+//                    return  it->second->smallest();
+//                } else if (std::next(it, 1) != l.end()) {
+//                    return std::next(it, 1)->first;
+//                } else {
+//                    return nullptr;
+//                }
+//            } else {
+                if (it->second != nullptr) {
+                    auto maybe_null = it->second->prev(p);
+
+                    if (maybe_null != nullptr) {
+                        return maybe_null;
+                    }
+
+                }
+                return it->first;
+//                if (std::next(it, 1) != l.end()) {
+//                    return std::next(it, 1)->first;
+//                } else {
+//                    return nullptr;
+//                }
+//            }
+
+
+        }
+
         std::shared_ptr<T> find (const T& elem) const {
 //            p1(l.size());
 //            p2("here looking for ", elem);
