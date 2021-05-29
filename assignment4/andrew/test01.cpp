@@ -94,6 +94,9 @@ bool confirmEverythingMatches(const btree<long>& testContainer, const set<long>&
   cout << "Confirms the btree and the set " 
           "contain exactly the same values..." << endl;
   for (long i = kMinInteger; i <= kMaxInteger; i++) {
+      if (i % 1000000 ==0) {
+          std::cout<< " i = "<<i<<std::endl;
+      }
     bool foundInTree = (testContainer.find(i) != testContainer.end());
     bool foundInSet = (stableContainer.find(i) != stableContainer.end());
     if (foundInTree != foundInSet) {

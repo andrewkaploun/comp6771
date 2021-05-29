@@ -16,7 +16,7 @@ int main(void) {
   b.insert(10);
   b.insert(3);
   b.insert(4);
-
+std::cout<< " hi?"<<std::endl;
   for(btree<int>::iterator iter = b.begin(); iter != b.end(); ++iter)
     std::cout << *iter << std::endl;
 

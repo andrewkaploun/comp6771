@@ -361,7 +361,8 @@ private:
 
         }
         std::shared_ptr<T> find (const T& elem) const {
-            p1(l.size());
+//            p1(l.size());
+//            p1(elem);
             if (!l.size()) {
                 return nullptr;
             }
