@@ -123,6 +123,9 @@ class btree {
 //  template<typename T>
   friend std::ostream& operator<< (std::ostream& os, const btree<T>& tree)
   {
+      for(iterator iter = tree.begin(); iter != tree.end(); ++iter) {
+          os<< *iter<< ' ';
+      }
       return os;
   }
 
@@ -139,14 +142,14 @@ class btree {
    */
   //todo
     iterator begin() const {
-        return iterator(nullptr, (root)); //todo getFirstVal()
+        return iterator(root->smallest(), (root)); //todo getFirstVal()
     }
     iterator end() const {
         return iterator(nullptr, (root));
     }
 
     const_iterator cbegin() const {
-        return const_iterator(nullptr, (root));//todo getFirstVal()
+        return const_iterator(root->smallest(), (root));//todo getFirstVal()
     }
     const_iterator cend() const {
         return const_iterator(nullptr, (root));
@@ -361,8 +364,8 @@ private:
 
         }
         std::shared_ptr<T> find (const T& elem) const {
-//            p1(l.size());
-//            p1(elem);
+            p1(l.size());
+            p2("here looking for ", elem);
             if (!l.size()) {
                 return nullptr;
             }
@@ -374,6 +377,7 @@ private:
             }
             auto it = std::prev(l.upper_bound(std::make_shared<T>(elem)),1);
             if (*(it->first) == elem) {
+                p1(elem);
                 return it->first;
             }
             if (it->second != nullptr) {
