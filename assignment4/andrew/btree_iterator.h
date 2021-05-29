@@ -52,7 +52,7 @@ template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
 template <typename T> btree_iterator<T>& btree_iterator<T>::operator--() {
 //    assert(p_ != nullptr);
     if (p_ == nullptr) {
-        return *(root->largest());
+        p_ = (root->largest());
     }
     p_ = root->prev(p_);
     return *this;

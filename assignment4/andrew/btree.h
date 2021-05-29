@@ -510,12 +510,13 @@ template<typename T> btree<T>::btree(btree<T>&& original) = default;
 //
 //}
 template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
-    btree<T> new_btree(rhs);
-    return new_btree;
+//    btree<T> thing = btree<T>(rhs);
+    *this = btree<T>(rhs);
+    return *this;
 }
 template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
-    btree<T> new_btree(rhs);
-    return new_btree;
+    *this = btree<T>(std::move(rhs));
+    return *this;
 }
 
 
