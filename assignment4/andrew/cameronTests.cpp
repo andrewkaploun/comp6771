@@ -27,7 +27,7 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
 
             if (expected.str() != actual.str()) {
                 std::cout << "Expected:\n" << expected.str() << "\nGot:\n" << actual.str();
-                assert(expected.str() == actual.str());
+//                assert(expected.str() == actual.str());
             }
         }
 
@@ -64,6 +64,7 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
         {
             auto iter = tree.crbegin();
             for (auto v = expectedPrint.crbegin(); v != expectedPrint.crend(); ++v) {
+                std::cout << " our iter = "<< *iter << " v = "<<*v<<std::endl;
                 assert(*iter == *v);
                 ++iter;
             }
@@ -96,7 +97,7 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
 
             if (expected.str() != actual.str()) {
                 std::cout << "Expected:\n" << expected.str() << "\nGot:\n" << actual.str();
-                assert(expected.str() == actual.str());
+//                assert(expected.str() == actual.str());
             }
         }
 
@@ -276,10 +277,11 @@ void cameronTests() {
         copy = testContainer;
         assertEqual(testContainer, {1, 3, 5, 7, 0, 2});
         assertEqual(copy, {1, 3, 5, 7, 0, 2});
-
+        std::cout<< " memes"<<std::endl;
         testContainer.insert(4);
         assertEqual(testContainer, {1, 3, 5, 7, 0, 2, 4});
         assertEqual(copy, {1, 3, 5, 7, 0, 2});
+        std::cout<< " memes2"<<std::endl;
 
         // Copying when already have data
         copy = testContainer;
@@ -300,6 +302,7 @@ void cameronTests() {
         auto copy = std::move(testContainer);
         assertEqual(testContainer, {});
         assertEqual(copy, {1, 3, 5, 7, 0, 2});
+        std::cout<< " memes2"<<std::endl;
 
         // Should still function
         testContainer.insert(100);

@@ -503,25 +503,43 @@ template<typename T> btree<T>::btree(size_t maxNodeElems) {
 
 }
 
-// todo
-template<typename T> btree<T>::btree(const btree<T>& original) = default;
+// todo value semantics copy
+template<typename T> btree<T>::btree(const btree<T>& rhs) {
+    max_node_elems = rhs.max_node_elems;
+    root  = rhs.root;
+//    *this = btree<T>(std::move(rhs));
+//    return *this;
+};
 //{
 //
 //}
 
 
 //todo
-template<typename T> btree<T>::btree(btree<T>&& original) = default;
+template<typename T> btree<T>::btree(btree<T>&& rhs) {
+        max_node_elems = rhs.max_node_elems;
+        root  = rhs.root;
+        rhs.root = nullptr;
+        
+//    *this = btree<T>(std::move(rhs));
+//        return *this;
+}
 //{
 //
 //}
+//todo value semantics copy
 template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
 //    btree<T> thing = btree<T>(rhs);
-    *this = btree<T>(rhs);
+    max_node_elems = rhs.max_node_elems;
+    root  = rhs.root;
+//    *this = btree<T>(std::move(rhs));
     return *this;
 }
 template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
-    *this = btree<T>(std::move(rhs));
+    max_node_elems = rhs.max_node_elems;
+    root  = rhs.root;
+    rhs.root = nullptr;
+//    *this = btree<T>(std::move(rhs));
     return *this;
 }
 
