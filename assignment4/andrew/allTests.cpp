@@ -1,8 +1,8 @@
 #include <iostream>
 #include <random>
 
-//#include "mattTests.h"
-//#include "suite.h"
+#include "mattTests.h"
+#include "suite.h"
 #include "cameronTests.cpp"
 #include "cseTests.cpp"
 int main() {
@@ -16,7 +16,7 @@ int main() {
     std::cout << "Running Cameron's tests" << std::endl;
     cameronTests();
     std::cout << "Passed Cameron's tests" << std::endl;
-//    std::cout << "Running Matt's tests" << std::endl;
-//    mattTests(rng);
-//    std::cout << "Passed Matt's tests" << std::endl;
+    std::cout << "Running Matt's tests" << std::endl;
+    mattTests(rng);
+    std::cout << "Passed Matt's tests" << std::endl;
 }
