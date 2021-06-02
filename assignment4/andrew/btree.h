@@ -289,14 +289,12 @@ private:
         std::shared_ptr<T> smallest() const {
 
             if (!l.size()) {
-                std::cout << " smallest nullptr"<<std::endl;
                 return nullptr;
             }
             if (first != nullptr) {
 
                 return first->smallest();
             }
-            std::cout << " smallest ="<<l.begin()->first<<std::endl;
 
             return l.begin()->first;
         }
@@ -548,7 +546,7 @@ template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
  *
  */
     if (node == nullptr) {
-        p1("copy nullptr");
+//        p1("copy nullptr");
         return nullptr;
     }
 
@@ -556,7 +554,7 @@ template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
     n->first = btree<T>::copy(node->first);
     for (auto p : node->l) {
 
-        p1("copy a node");
+//        p1("copy a node");
         auto element = p.first;
         auto subtree = p.second;
         n->l[std::make_shared<T>(*element)] = btree<T>::copy(subtree);
@@ -566,7 +564,7 @@ template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
 }
 // todo value semantics copy
 template<typename T> btree<T>::btree(const btree<T>& rhs) {
-    std::cout << " le copy?"<< std::endl;
+//    std::cout << " le copy?"<< std::endl;
     max_node_elems = rhs.max_node_elems;
     root  = btree<T>::copy(rhs.root);
 //    *this = btree<T>(std::move(rhs));
@@ -592,7 +590,7 @@ template<typename T> btree<T>::btree(btree<T>&& rhs) {
 template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
 //    btree<T> thing = btree<T>(rhs);
     max_node_elems = rhs.max_node_elems;
-    root  = rhs.root;
+    root  = btree<T>::copy(rhs.root);
 //    *this = btree<T>(std::move(rhs));
     return *this;
 }
