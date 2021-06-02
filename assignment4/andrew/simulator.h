@@ -47,6 +47,7 @@ struct simulator {
         typename btree<T>::const_iterator bpostfix = b.cbegin();
         auto siter = s.cbegin();
         while (siter != s.cend()) {
+
             assert(*siter == *biter);
             if (*siter != *bpostfix++) {
                 std::cout<< " memes"<<std::endl;

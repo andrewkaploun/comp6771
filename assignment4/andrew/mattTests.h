@@ -41,17 +41,17 @@ void runTests(std::function<T()> generator, size_t nOps, size_t max) {
     };
     auto fns = makeFns({
         // construction and deletion
-        {5, [&]() { s.emplace_back(randint<1, 100>()); }},
-        {15, [&]() { s.erase(s.begin() + (randint<>() % s.size())); }},
+        {5, [&]() {std::cout<<"add"<<std::endl; s.emplace_back(randint<1, 100>()); }},
+        {15, [&]() {std::cout<<"delet"<<std::endl; s.erase(s.begin() + (randint<>() % s.size())); }},
 
         // move and copy constructors / assignment
-        {5, [&]() { s.emplace_back(getSim()); }},
-        {5, [&]() {
+        {5, [&]() {std::cout<<"copy constructor"<<std::endl; s.emplace_back(getSim()); }},
+        {5, [&]() { std::cout<<"move constructor"<<std::endl;
             s.emplace_back(std::move(getSim()));
             s[last].assertEmpty();
         }},
-        {20, [&]() { getSim() = getSim(); }},
-        {10, [&]() {
+        {20, [&]() {std::cout<<"copy assignment"<<std::endl; getSim() = getSim(); }},
+        {10, [&]() {std::cout<<"move assignment"<<std::endl;
             auto base = randint<>() % s.size();
             auto add = randint<>() % (s.size() - 1) + 1;
             s[base] = std::move(s[(base + add) % s.size()]);
@@ -59,12 +59,12 @@ void runTests(std::function<T()> generator, size_t nOps, size_t max) {
         }},
 
         // normal operations
-        {1000, [&]() { getSim().insert(generator()); }},
-        {1000, [&]() { getSim().find(generator()); }},
+        {1000, [&]() {std::cout<<"insert"<<std::endl; getSim().insert(generator()); }},
+        {1000, [&]() {std::cout<<"find"<<std::endl; getSim().find(generator()); }},
 
 //         correctness / iterator checking
-        {20, [&]() { getSim().checkEqual(); }},
-        {1, [&]() { getSim().checkIterators(); }},
+        {20, [&]() {std::cout<<"check equal"<<std::endl; getSim().checkEqual(); }},
+        {1, [&]() { std::cout<<"check iterators"<<std::endl;getSim().checkIterators(); }},
     });
     if (check_every_iteration)
         s[last % s.size()].checkEqual();
