@@ -36,12 +36,14 @@ public:
     explicit btree_iterator(typename std::shared_ptr<T> p = nullptr,
         const std::shared_ptr<typename btree<T>::BtreeNode> root_ = nullptr) : p_(p), root(root_) {}
     btree_iterator& operator=(const btree_iterator& rhs) {
-        *this=     btree_iterator<T>(p_, root);
+        p_ = rhs.p_;
+        root = rhs.root;
+//        *this=     btree_iterator<T>(p_, root);
         return *this;
     }
 private:
     typename std::shared_ptr<T> p_;
-    const  std::shared_ptr<typename btree<T>::BtreeNode> root;
+      std::shared_ptr<typename btree<T>::BtreeNode> root;
 
 };
 
