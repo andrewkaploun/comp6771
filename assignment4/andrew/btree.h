@@ -120,20 +120,8 @@ class btree {
    * @param tree a const reference to a B-Tree object
    * @return a reference to os
    */
-//  template<typename T>
-  friend std::ostream& operator<< (std::ostream& os, const btree<T>& tree)
-  {
-      for(iterator iter = tree.begin(); iter != tree.end(); ++iter) {
-          os<< *iter;
-
-//          ++iter;
-//          if (iter != tree.end())
-             os << ' ';
-//          --iter;
-          std::cout << " at a thing "<<*iter<<std::endl;
-      }
-      return os;
-  }
+  template<typename TP>
+  friend std::ostream& operator<< (std::ostream& os, const btree<TP>& tree);
 
   /**
    * The following can go here
@@ -299,13 +287,17 @@ private:
 
 
         std::shared_ptr<T> smallest() const {
+
             if (!l.size()) {
+                std::cout << " smallest nullptr"<<std::endl;
                 return nullptr;
             }
             if (first != nullptr) {
 
                 return first->smallest();
             }
+            std::cout << " smallest ="<<l.begin()->first<<std::endl;
+
             return l.begin()->first;
         }
 
@@ -500,6 +492,21 @@ private:
     static std::shared_ptr<BtreeNode>  copy(std::shared_ptr<BtreeNode> t) ;
 };
 
+
+template<typename T> std::ostream& operator << (std::ostream& os, const btree<T>& tree){
+    std::cout << " important that we enter the function"<< std::endl;
+    for(typename btree<T>::iterator iter = tree.begin(); iter != tree.end(); ++iter) {
+    os<< *iter;
+
+    ++iter;
+    if (iter != tree.end())
+    os << ' ';
+    --iter;
+    std::cout << " at a thing "<<*iter<<std::endl;
+    }
+    return os;
+}
+
 template<typename T> btree<T>::btree(size_t maxNodeElems) {
     max_node_elems = maxNodeElems;
 
@@ -516,12 +523,15 @@ template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
  *
  */
     if (node == nullptr) {
+        p1("copy nullptr");
         return nullptr;
     }
 
     auto n = std::make_shared<btree<T>::BtreeNode>(node->max_node_elems);
     n->first = btree<T>::copy(node->first);
-    for (auto p : n->l) {
+    for (auto p : node->l) {
+
+        p1("copy a node");
         auto element = p.first;
         auto subtree = p.second;
         n->l[std::make_shared<T>(*element)] = btree<T>::copy(subtree);
@@ -531,6 +541,7 @@ template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
 }
 // todo value semantics copy
 template<typename T> btree<T>::btree(const btree<T>& rhs) {
+    std::cout << " le copy?"<< std::endl;
     max_node_elems = rhs.max_node_elems;
     root  = btree<T>::copy(rhs.root);
 //    *this = btree<T>(std::move(rhs));

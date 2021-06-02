@@ -27,7 +27,7 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
 
             if (expected.str() != actual.str()) {
                 std::cout << "Expected:\n" << expected.str() << "\nGot:\n" << actual.str();
-//                assert(expected.str() == actual.str());
+                assert(expected.str() == actual.str());
             }
         }
 
@@ -82,10 +82,12 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
 
     // Testing with non_const btree
     {
+        std::cout<< " before copy confirm"<<std::endl;
         auto tree_nonconst = const_cast<btree<T>&>(tree);
         std::stringstream actual, expected;
+        std::cout<< " start of non const stuff"<<std::endl;
         actual << tree_nonconst;
-
+        std::cout << " end"<<std::endl;
         // Test printing is the same
         {
             for (auto it = expected_non_const.begin(); it != expected_non_const.end(); it++) {
@@ -97,7 +99,7 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
 
             if (expected.str() != actual.str()) {
                 std::cout << "Expected:\n" << expected.str() << "\nGot:\n" << actual.str();
-//                assert(expected.str() == actual.str());
+                assert(expected.str() == actual.str());
             }
         }
 
@@ -107,7 +109,7 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
         {
             auto t = tree_nonconst.cbegin();
             for (auto v = expected_non_const.cbegin(); v != expected_non_const.cend(); ++v) {
-                std::cout << " t = "<< t<< std::endl;
+//                std::cout << " t = "<< t<< std::endl;
                 std::cout << " *t = "<< *t<< std::endl;
                 assert(*t == *v);
                 ++t;
