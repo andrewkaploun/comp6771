@@ -515,11 +515,19 @@ template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
  actually its trivial if you can copy a binary tree.
  *
  */
+    if (node == nullptr) {
+        return nullptr;
+    }
 
+    auto n = std::make_shared<btree<T>::BtreeNode>(node->max_node_elems);
+    n->first = btree<T>::copy(node->first);
+    for (auto p : n->l) {
+        auto element = p.first;
+        auto subtree = p.second;
+        n->l[std::make_shared<T>(*element)] = btree<T>::copy(subtree);
+    }
 
-    return std::make_shared<btree<T>::BtreeNode>(node->max_node_elems);
-
-
+    return n;
 }
 // todo value semantics copy
 template<typename T> btree<T>::btree(const btree<T>& rhs) {
