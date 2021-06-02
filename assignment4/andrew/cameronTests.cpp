@@ -107,6 +107,8 @@ void assertEqual(const btree<T>& tree, std::vector<T> expectedPrint) {
         {
             auto t = tree_nonconst.cbegin();
             for (auto v = expected_non_const.cbegin(); v != expected_non_const.cend(); ++v) {
+                std::cout << " t = "<< t<< std::endl;
+                std::cout << " *t = "<< *t<< std::endl;
                 assert(*t == *v);
                 ++t;
             }
