@@ -53,7 +53,7 @@ struct simulator {
                 std::cout<< " memes"<<std::endl;
                 std::cout<< " memes"<<* (int *) 0<<std::endl;
             }
-            assert(*siter == *bpostfix++);
+//            assert(*siter == *bpostfix++);
             ++biter;
             ++siter;
         }

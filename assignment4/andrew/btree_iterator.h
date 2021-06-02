@@ -52,16 +52,19 @@ template <typename T> typename btree_iterator<T>::reference btree_iterator<T>::o
     return *p_;
 }
 
-template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() {
+template <typename T> btree_iterator<T>& btree_iterator<T>::operator++() { //prefix i think
     assert(p_ != nullptr);
     p_ = root->next(p_);
     return *this;
 }
 //
-template <typename T> btree_iterator<T> btree_iterator<T>::operator++(int) {
-    assert(p_ != nullptr);
+template <typename T> btree_iterator<T> btree_iterator<T>::operator++(int) { //postfix i think
+    if (p_ == nullptr) {
+        std::cout << *(int*)0<<std::endl;
+    }
+    auto pp = p_;
     p_ = root->next(p_);
-    return btree_iterator<T>(p_, root);
+    return btree_iterator<T>(pp, root);
 }
 
 
@@ -78,11 +81,13 @@ template <typename T> btree_iterator<T>& btree_iterator<T>::operator--() {
 //
 template <typename T> btree_iterator<T> btree_iterator<T>::operator--(int) {
 //    assert(p_ != nullptr);
+    auto pp = p_;
     if (p_ == nullptr) {
         p_ = (root->largest());
     }
+
     p_ = root->prev(p_);
-    return btree_iterator<T>(p_, root);
+    return btree_iterator<T>(pp, root);
 }
 
 template <typename T> bool btree_iterator<T>::operator==(const btree_iterator<T>& other) const {
