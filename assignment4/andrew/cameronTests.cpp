@@ -253,14 +253,17 @@ void cameronTests() {
         testContainer.insert(7);
         testContainer.insert(0);
         testContainer.insert(2);
+        std::cout << " memes1.0"<<std::endl;
 
         auto copy = testContainer;
         assertEqual(testContainer, {1, 3, 5, 7, 0, 2});
         assertEqual(copy, {1, 3, 5, 7, 0, 2});
-
+std::cout << " memes1.1"<<std::endl;
         testContainer.insert(4);
         assertEqual(testContainer, {1, 3, 5, 7, 0, 2, 4});
         assertEqual(copy, {1, 3, 5, 7, 0, 2});
+        std::cout << " memes1.2"<<std::endl;
+
     }
 
     std::cout << "Testing copy assignment" << std::endl;

@@ -255,6 +255,8 @@ class btree {
         return const_reverse_iterator(begin());
     }
 
+
+
 private:
     struct SharedComparatorN {
         bool operator()(const std::shared_ptr<T>& lhs,
@@ -494,6 +496,8 @@ private:
 
     std::shared_ptr<BtreeNode> root;
 
+
+    static std::shared_ptr<BtreeNode>  copy(std::shared_ptr<BtreeNode> t) ;
 };
 
 template<typename T> btree<T>::btree(size_t maxNodeElems) {
@@ -502,11 +506,25 @@ template<typename T> btree<T>::btree(size_t maxNodeElems) {
     root = std::make_shared<BtreeNode>(max_node_elems);
 
 }
+//
+template<typename T>     std::shared_ptr<typename btree<T>::BtreeNode>
+        btree<T>::copy(std::shared_ptr<typename btree<T>::BtreeNode> node)  {
+/*
+ pseudocode:
+ *
+ actually its trivial if you can copy a binary tree.
+ *
+ */
 
+
+    return std::make_shared<btree<T>::BtreeNode>(node->max_node_elems);
+
+
+}
 // todo value semantics copy
 template<typename T> btree<T>::btree(const btree<T>& rhs) {
     max_node_elems = rhs.max_node_elems;
-    root  = rhs.root;
+    root  = btree<T>::copy(rhs.root);
 //    *this = btree<T>(std::move(rhs));
 //    return *this;
 };
@@ -520,7 +538,6 @@ template<typename T> btree<T>::btree(btree<T>&& rhs) {
         max_node_elems = rhs.max_node_elems;
         root  = rhs.root;
         rhs.root = nullptr;
-        
 //    *this = btree<T>(std::move(rhs));
 //        return *this;
 }
