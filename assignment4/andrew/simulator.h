@@ -48,6 +48,10 @@ struct simulator {
         auto siter = s.cbegin();
         while (siter != s.cend()) {
             assert(*siter == *biter);
+            if (*siter != *bpostfix++) {
+                std::cout<< " memes"<<std::endl;
+                std::cout<< " memes"<<* (int *) 0<<std::endl;
+            }
             assert(*siter == *bpostfix++);
             ++biter;
             ++siter;
