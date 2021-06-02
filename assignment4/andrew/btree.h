@@ -579,7 +579,7 @@ template<typename T> btree<T>::btree(const btree<T>& rhs) {
 template<typename T> btree<T>::btree(btree<T>&& rhs) {
         max_node_elems = rhs.max_node_elems;
         root  = rhs.root;
-        rhs.root = nullptr;
+        rhs.root = std::make_shared<btree<T>::BtreeNode>(max_node_elems);
 //    *this = btree<T>(std::move(rhs));
 //        return *this;
 }
@@ -597,7 +597,7 @@ template<typename T> btree<T>& btree<T>::operator=(const btree<T>& rhs){
 template<typename T> btree<T>& btree<T>::operator=(btree<T>&& rhs) {
     max_node_elems = rhs.max_node_elems;
     root  = rhs.root;
-    rhs.root = nullptr;
+    rhs.root = std::make_shared<btree<T>::BtreeNode>(max_node_elems);
 //    *this = btree<T>(std::move(rhs));
     return *this;
 }
