@@ -62,9 +62,9 @@ void runTests(std::function<T()> generator, size_t nOps, size_t max) {
         {1000, [&]() { getSim().insert(generator()); }},
         {1000, [&]() { getSim().find(generator()); }},
 
-        // correctness / iterator checking
-//        {20, [&]() { getSim().checkEqual(); }},
-//        {1, [&]() { getSim().checkIterators(); }},
+         correctness / iterator checking
+        {20, [&]() { getSim().checkEqual(); }},
+        {1, [&]() { getSim().checkIterators(); }},
     });
     if (check_every_iteration)
         s[last % s.size()].checkEqual();
