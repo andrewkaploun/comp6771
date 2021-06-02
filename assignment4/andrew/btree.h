@@ -495,15 +495,40 @@ private:
 
 template<typename T> std::ostream& operator << (std::ostream& os, const btree<T>& tree){
     std::cout << " important that we enter the function"<< std::endl;
-    for(typename btree<T>::iterator iter = tree.begin(); iter != tree.end(); ++iter) {
-    os<< *iter;
+    std::queue<std::shared_ptr<typename btree<T>::BtreeNode>> q ;
+    q.push(tree.root);
+    std::set<std::shared_ptr<typename btree<T>::BtreeNode>> seen;
+    std::vector<T> trav;
+    while (q.size()) {
+        auto node = q.front();
+        q.pop();
+        if (node == nullptr) {
+            continue;
+        }
 
-    ++iter;
-    if (iter != tree.end())
-    os << ' ';
-    --iter;
-    std::cout << " at a thing "<<*iter<<std::endl;
+        seen.insert(node);
+        q.push(node->first);
+        for (auto p : node->l) {
+            trav.push_back(*(p.first));
+            q.push(p.second);
+        }
+
     }
+    for (size_t i = 0; i < trav.size(); i++) {
+        os << trav[i];
+        if (i + 1 < trav.size()) {
+            os << " ";
+        }
+    }
+    //    for(typename btree<T>::iterator iter = tree.begin(); iter != tree.end(); ++iter) {
+//    os<< *iter;
+//
+//    ++iter;
+//    if (iter != tree.end())
+//    os << ' ';
+//    --iter;
+//    std::cout << " at a thing "<<*iter<<std::endl;
+//    }
     return os;
 }
 
