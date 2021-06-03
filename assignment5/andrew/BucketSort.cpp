@@ -67,12 +67,12 @@ size_t core_arr_interval_end(unsigned int core, unsigned int numCores, size_t nu
 // }
 
 void BucketSort::sort(unsigned int numCores) {
-    std::cout << " initially array is ";
-    for (auto i : numbersToSort) {
-        std::cout << i << ' ';
-    }
+    // std::cout << " initially array is ";
+    // for (auto i : numbersToSort) {
+    //     std::cout << i << ' ';
+    // }
 
-    std:: cout<< std::endl;
+    // std:: cout<< std::endl;
 
 
 
@@ -98,19 +98,19 @@ void BucketSort::sort(unsigned int numCores) {
     // The easy thing to do is simply to bucket each starting num in the range of 00, 99 by first_2_digits/divisor
 
     auto first = [&](unsigned int thread_id) {
-        std:: cout << "first thread id is "<< thread_id<<std::endl;
+        // std:: cout << "first thread id is "<< thread_id<<std::endl;
         size_t start_index = core_arr_interval_end(thread_id-1, numCores, numbersToSort.size());
         size_t end_index = core_arr_interval_end(thread_id, numCores, numbersToSort.size());
         // std::cout << " start index = "<< start_index << " end index = "<< end_index<<std::endl;
         for (size_t i = start_index; i < end_index; i++) {
             unsigned int bucket = std::min(first_2_digits(numbersToSort[i])/divisor, numCores - 1); 
-            std:: cout << " number "<< numbersToSort[i]<< " has first 2 digits "<< first_2_digits(numbersToSort[i])
-                <<"  and goes into bucket "<<bucket<< std::endl;
+            // std:: cout << " number "<< numbersToSort[i]<< " has first 2 digits "<< first_2_digits(numbersToSort[i])
+            //     <<"  and goes into bucket "<<bucket<< std::endl;
             std::lock_guard<std::mutex> guard(buckets_mutex[bucket]);
             buckets[bucket *numbersToSort.size() + buckets_index[bucket]] = numbersToSort[i];
-            std::cout << "at thread id "<< thread_id << " and bucket "<< bucket << 
-                " setting buckets["<<bucket  *numbersToSort.size() + buckets_index[bucket] << "] to "
-                << numbersToSort[i]<< std::endl;
+            // std::cout << "at thread id "<< thread_id << " and bucket "<< bucket << 
+            //     " setting buckets["<<bucket  *numbersToSort.size() + buckets_index[bucket] << "] to "
+            //     << numbersToSort[i]<< std::endl;
 
             buckets_index[bucket]++;
         }
@@ -127,11 +127,11 @@ void BucketSort::sort(unsigned int numCores) {
 
 
     auto sort_buckets = [&](unsigned int thread_id) {
-        std::cout << " buckets before is "<< std::endl;
-        for (unsigned int i  = thread_id *numbersToSort.size(); i < thread_id*numbersToSort.size() + buckets_index[thread_id]; i++) {
-            std::cout << buckets[i]<< " ";
-        }
-        std::cout<< std::endl;
+        // std::cout << " buckets before is "<< std::endl;
+        // for (unsigned int i  = thread_id *numbersToSort.size(); i < thread_id*numbersToSort.size() + buckets_index[thread_id]; i++) {
+        //     std::cout << buckets[i]<< " ";
+        // }
+        // std::cout<< std::endl;
 
 
 
@@ -140,11 +140,11 @@ void BucketSort::sort(unsigned int numCores) {
         
         
         
-        std::cout << " buckets after is "<< std::endl;
-        for (unsigned int i  = thread_id *numbersToSort.size(); i < thread_id*numbersToSort.size() + buckets_index[thread_id]; i++) {
-            std::cout << buckets[i]<< " ";
-        }
-        std::cout<< std::endl;
+        // std::cout << " buckets after is "<< std::endl;
+        // for (unsigned int i  = thread_id *numbersToSort.size(); i < thread_id*numbersToSort.size() + buckets_index[thread_id]; i++) {
+        //     std::cout << buckets[i]<< " ";
+        // }
+        // std::cout<< std::endl;
     };
     
     thread_id = 0;
@@ -176,11 +176,11 @@ void BucketSort::sort(unsigned int numCores) {
     }
 
 
-    std::cout << " after sorting array is ";
-    for (auto i : numbersToSort) {
-        std::cout << i << ' ';
-    }
+    // std::cout << " after sorting array is ";
+    // for (auto i : numbersToSort) {
+    //     std::cout << i << ' ';
+    // }
 
-    std:: cout<< std::endl;
+    // std:: cout<< std::endl;
     delete[] buckets;
 }

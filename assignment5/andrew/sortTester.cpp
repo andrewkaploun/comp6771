@@ -8,7 +8,7 @@
 
 int main() {
 	
-	unsigned int totalNumbers =	10;
+	unsigned int totalNumbers =	500000;
 	unsigned int printIndex =	259000;
 	
 	// use totalNumbers required as the seed for the random
