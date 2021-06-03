@@ -23,10 +23,11 @@ to n would be a pain for that.
 
 When you do that, you do the separation into some buckets, then voila, you're done.
 
+note: it feels like this would not really be doable in-place, so what we do is try to use data
+segment or stack to avoid memory allocation. (heap isnt as expensive as you think)
 
 
-
-
+actually, 10 buckets is pretty bad since we some things take 1.5x as long as others then
  
 
 
@@ -54,5 +55,8 @@ struct BucketSort {
     // vector of nums
     std::vector<unsigned int> numbersToSort;
     void sort(unsigned int numCores);
+
+private:
+    unsigned int     cores;
 };
 #endif /* BUCKET_SORT_H */
