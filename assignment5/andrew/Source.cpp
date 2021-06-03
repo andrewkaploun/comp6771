@@ -10,7 +10,7 @@
 
 int fuzzer()
 {
-    static constexpr const size_t numbers = 500000;
+    static constexpr const size_t numbers = 5000;
     static constexpr const size_t runs = 500;
 
     std::mt19937 mt(std::random_device{}());
@@ -108,16 +108,16 @@ int my_test()
     */
     pbs.sort(8);
 
-    std::cout << pbs << std::endl;
+    // std::cout << pbs << std::endl;
 
     return 0;
 }
 
 int main()
 {
-    my_test();
-    provided_test();
-    //fuzzer();
+    // my_test();
+    // provided_test();
+    fuzzer();
 
     return 0;
 }

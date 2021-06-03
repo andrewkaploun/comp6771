@@ -75,6 +75,14 @@ void BucketSort::sort(unsigned int numCores) {
     // std:: cout<< std::endl;
 
 
+//  std::sort(numbersToSort.begin(), numbersToSort.end(),
+//             [](const unsigned int& x, const unsigned int& y) {return aLessB(x, y, 1); }); // zeroeth num is already done :)
+        
+//     return ;
+
+
+
+
 
 
     numCores = std::min(numCores, (unsigned int) 8);
