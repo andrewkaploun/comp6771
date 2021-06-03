@@ -36,14 +36,19 @@ bool aLessB(const unsigned int& x, const unsigned int& y, unsigned int pow) {
 }
 
 unsigned int ith_digit(unsigned int n, unsigned int digit) { //0-indexed
+    if (digit == 0){
+          while (n/10 > 0) n /= 10;
+        return n;
+    }
     while (n/10 >=  std::round(std::pow(10, digit))) {
         n /= 10;
     }
-    return n;
+    return n%10;
 }
 
 unsigned int first_2_digits(unsigned int i) {
-    return ith_digit(i, 0)*10 + ith_digit(i, 1);
+    // std::cout << " first digit of "<< i << " is "<<ith_digit(i, 0)<<std::endl;
+    return (ith_digit(i, 0)*10) + ith_digit(i, 1);
 }
 
 
@@ -62,6 +67,15 @@ size_t core_arr_interval_end(unsigned int core, unsigned int numCores, size_t nu
 // }
 
 void BucketSort::sort(unsigned int numCores) {
+    std::cout << " initially array is ";
+    for (auto i : numbersToSort) {
+        std::cout << i << ' ';
+    }
+
+    std:: cout<< std::endl;
+
+
+
 
     numCores = std::min(numCores, (unsigned int) 8);
 
@@ -83,20 +97,27 @@ void BucketSort::sort(unsigned int numCores) {
     
     // The easy thing to do is simply to bucket each starting num in the range of 00, 99 by first_2_digits/divisor
 
-    auto first = [&, thread_id]() {
+    auto first = [&](unsigned int thread_id) {
+        std:: cout << "first thread id is "<< thread_id<<std::endl;
         size_t start_index = core_arr_interval_end(thread_id-1, numCores, numbersToSort.size());
         size_t end_index = core_arr_interval_end(thread_id, numCores, numbersToSort.size());
-
+        // std::cout << " start index = "<< start_index << " end index = "<< end_index<<std::endl;
         for (size_t i = start_index; i < end_index; i++) {
             unsigned int bucket = std::min(first_2_digits(numbersToSort[i])/divisor, numCores - 1); 
+            std:: cout << " number "<< numbersToSort[i]<< " has first 2 digits "<< first_2_digits(numbersToSort[i])
+                <<"  and goes into bucket "<<bucket<< std::endl;
             std::lock_guard<std::mutex> guard(buckets_mutex[bucket]);
-            buckets[thread_id * numbersToSort.size() + buckets_index[bucket]] = numbersToSort[i];
+            buckets[bucket *numbersToSort.size() + buckets_index[bucket]] = numbersToSort[i];
+            std::cout << "at thread id "<< thread_id << " and bucket "<< bucket << 
+                " setting buckets["<<bucket  *numbersToSort.size() + buckets_index[bucket] << "] to "
+                << numbersToSort[i]<< std::endl;
+
             buckets_index[bucket]++;
         }
     };
     
     for (unsigned int i = 0; i < numCores; i++) {
-        threads[i] = std::thread{first};
+        threads[i] = std::thread{first, thread_id};
         thread_id++;
     }
 
@@ -105,14 +126,30 @@ void BucketSort::sort(unsigned int numCores) {
     }
 
 
-    auto sort_buckets = [&, thread_id]() {
-        std::sort( &buckets[thread_id * numCores], &buckets[thread_id * numCores + buckets_index[thread_id]],
+    auto sort_buckets = [&](unsigned int thread_id) {
+        std::cout << " buckets before is "<< std::endl;
+        for (unsigned int i  = thread_id *numbersToSort.size(); i < thread_id*numbersToSort.size() + buckets_index[thread_id]; i++) {
+            std::cout << buckets[i]<< " ";
+        }
+        std::cout<< std::endl;
+
+
+
+        std::sort( &buckets[thread_id  *numbersToSort.size()], &buckets[thread_id * numbersToSort.size() + buckets_index[thread_id]],
             [](const unsigned int& x, const unsigned int& y) {return aLessB(x, y, 1); }); // zeroeth num is already done :)
+        
+        
+        
+        std::cout << " buckets after is "<< std::endl;
+        for (unsigned int i  = thread_id *numbersToSort.size(); i < thread_id*numbersToSort.size() + buckets_index[thread_id]; i++) {
+            std::cout << buckets[i]<< " ";
+        }
+        std::cout<< std::endl;
     };
     
     thread_id = 0;
     for (unsigned int i = 0; i < numCores; i++) {
-        threads[i] = std::thread{sort_buckets};
+        threads[i] = std::thread{sort_buckets, thread_id};
         thread_id++;
     }
 
@@ -121,15 +158,15 @@ void BucketSort::sort(unsigned int numCores) {
     }
     
     unsigned int start_index = 0;
-    auto merge = [&, thread_id, start_index]() {
+    auto merge = [&](unsigned int thread_id, unsigned int start_index) {
         for (unsigned int i = 0; i < buckets_index[thread_id]; i++) {
-            numbersToSort[start_index + i] = buckets[thread_id*numCores + i];
+            numbersToSort[start_index + i] = buckets[thread_id*numbersToSort.size() + i];
         }
     };
 
     thread_id = 0;
     for (unsigned int i = 0; i < numCores; i++) {
-        threads[i] = std::thread{merge};
+        threads[i] = std::thread{merge, thread_id, start_index};
         thread_id++;
         start_index += buckets_index[i];
     }
@@ -137,5 +174,13 @@ void BucketSort::sort(unsigned int numCores) {
     for (unsigned int i = 0; i < numCores; i++) {
         threads[i].join();
     }
+
+
+    std::cout << " after sorting array is ";
+    for (auto i : numbersToSort) {
+        std::cout << i << ' ';
+    }
+
+    std:: cout<< std::endl;
     delete[] buckets;
 }
